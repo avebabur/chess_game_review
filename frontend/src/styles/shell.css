@@ -1,0 +1,83 @@
+/* App shell — new nav + global background. Loaded after App.css so it wins. */
+body {
+  background: radial-gradient(1200px 600px at 50% -10%, #221d14 0%, #16140f 55%, #100e0a 100%);
+  background-attachment: fixed;
+}
+
+.app { min-height: 100vh; display: flex; flex-direction: column; }
+
+/* Legacy screens (Dashboard, Puzzles, Play, Review) are styled in App.css off a
+ * handful of CSS vars. Remapping them here re-skins every legacy screen to the
+ * new palette with no per-component edits. New screens wrap in `.cr2`, which
+ * sets its own tokens closer in the tree, so they're unaffected. */
+.main-content {
+  flex: 1; width: 100%; max-width: 1600px; margin: 0 auto; padding: 22px 22px 60px;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --bg: #16140f;
+  --bg-card: #211e18;
+  --bg-input: #16140f;
+  --card: #211e18;
+  --border: #3d3729;
+  --text: #f1ece1;
+  --text-primary: #f1ece1;
+  --text-muted: #a8a08d;
+  --text-secondary: #a8a08d;
+  --accent: #e0a93f;
+  --success: #74b25c;
+  --danger: #d65f47;
+  --draw: #948b78;
+  --board-frame: #2a261e;
+  --board-dark: #2a261e;
+}
+
+/* Nav */
+.nav2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 0 22px;
+  height: 60px;
+  background: rgba(24, 21, 16, 0.82);
+  backdrop-filter: saturate(140%) blur(12px);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+.nav2-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 17px;
+  font-weight: 740;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  text-decoration: none;
+}
+.nav2-logo {
+  color: var(--accent);
+  font-size: 20px;
+  filter: drop-shadow(0 1px 4px rgba(224, 169, 63, 0.35));
+}
+.nav2-links { display: flex; gap: 3px; }
+.nav2-link {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 15px;
+  border-radius: var(--radius-sm);
+  transition: color 0.15s var(--ease), background 0.15s var(--ease);
+}
+.nav2-link:hover { color: var(--text); background: rgba(255, 255, 255, 0.04); }
+.nav2-link.on { color: var(--accent-2); background: var(--accent-soft); }
+
+@media (max-width: 720px) {
+  .nav2 { flex-direction: column; height: auto; padding: 10px 14px; gap: 10px; }
+  .nav2-links { flex-wrap: wrap; justify-content: center; }
+}
+
+.route-loading { padding: 80px 20px; text-align: center; color: var(--muted); font-size: 15px; }
+.cr2 .link, .link { color: var(--accent-2); text-decoration: none; font-weight: 600; }
+.cr2 .link:hover { text-decoration: underline; }

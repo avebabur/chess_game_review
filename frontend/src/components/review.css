@@ -1,0 +1,68 @@
+/* Review re-skin.
+ * The whole review chrome (header, move list, eval bar, side panel, player bars,
+ * explanation blocks) is styled in App.css off a small set of CSS variables.
+ * Remapping those variables to the new palette re-themes the entire screen with
+ * zero markup/logic changes — the board (react-chessboard, Merida pieces, blue2
+ * board, per-square coaching tints) is intentionally kept as-is. */
+.review-skin {
+  --bg: #16140f;
+  --bg-card: #211e18;
+  --bg-input: #16140f;
+  --card: #211e18;
+  --border: #3d3729;
+  --text: #f1ece1;
+  --text-primary: #f1ece1;
+  --text-muted: #a8a08d;
+  --text-secondary: #a8a08d;
+  --accent: #e0a93f;
+  --success: #74b25c;
+  --danger: #d65f47;
+  --draw: #948b78;
+  --board-frame: #2a261e;
+  --board-dark: #2a261e;
+
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- Light structural polish (safe, color/radius/spacing only) --- */
+.review-skin .review-header,
+.review-skin .review-side-panel,
+.review-skin .review-move-list,
+.review-skin .explanation-panel,
+.review-skin .key-moments,
+.review-skin .drift-spans {
+  border-radius: 14px;
+}
+
+/* Soften card edges + give the panels a subtle lift */
+.review-skin .explanation-panel,
+.review-skin .key-moments,
+.review-skin .review-move-list,
+.review-skin .review-side-panel {
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.28);
+}
+
+/* Accent the active move / interactive chips a touch more crisply */
+.review-skin .move-cell.active,
+.review-skin .explanation-step-btn:hover,
+.review-skin .key-moment-row:hover {
+  background: rgba(224, 169, 63, 0.14);
+}
+
+/* Warm the primary action buttons to match the new gold */
+.review-skin .reanalyze-btn,
+.review-skin .reanalyze-moment-btn {
+  border-color: rgba(224, 169, 63, 0.4);
+}
+
+/* Board frame: blend the coordinate gutter into the dark theme */
+.review-skin .board-frame { background: transparent; }
+
+/* Keyboard hint footer */
+.review-skin .keyboard-hint {
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+  margin-top: 18px;
+}

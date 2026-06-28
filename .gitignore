@@ -1,0 +1,40 @@
+# --- Python ---
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Environment / secrets ---
+.env
+
+# --- Databases (regenerated locally; not source) ---
+*.db
+*.db.bak-*
+chess_review.db
+backend/chess_review.db
+backend/games.db
+
+# --- Maia-2 model weights (267 MB, auto-downloaded on first run) ---
+# Exceeds GitHub's 100 MB file limit — fetched at runtime, not committed.
+maia2_models/*.pt
+maia2_models/*.pt.zst
+
+# --- Frontend build output / deps ---
+frontend/dist/
+frontend/node_modules/
+dist/
+dist-ssr/
+
+# --- Editor / OS ---
+.DS_Store
+.idea/
+*.swp
+
+# --- Local Claude Code settings ---
+.claude/settings.local.json
+
+# --- Misc scratch ---
+explanation_test/
+*.log

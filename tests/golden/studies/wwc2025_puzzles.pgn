@@ -1,0 +1,173 @@
+[Event "FIDE Women's World Cup 2025 - Puzzle Pack: Amina Kairbekova vs. Mobina Alinasab"]
+[Date "2025.07.09"]
+[Result "*"]
+[Variant "Standard"]
+[ECO "?"]
+[Opening "?"]
+[StudyName "FIDE Women's World Cup 2025 - Puzzle Pack"]
+[ChapterName "Amina Kairbekova vs. Mobina Alinasab"]
+[ChapterURL "https://lichess.org/study/6lb13AlX/PR3mdn5T"]
+[Annotator "https://lichess.org/@/Lichess"]
+[FEN "r2qk2r/4Rpp1/p7/1p3PPp/Q2n4/2N2p2/PP3PBP/R5K1 b kq - 0 18"]
+[SetUp "1"]
+[UTCDate "2025.07.09"]
+[UTCTime "09:29:10"]
+[ChapterMode "gamebook"]
+
+18... Kf8! { Gaining this tempo is important. } (18... Qxe7?? $18 19. Qxd4 Qxg5 20. Qe4+ { comes with check. }) 19. Qd1 Qxe7 20. Qxd4 Qxg5 21. Qd6+ Kg8 22. Qg3 Qxg3 23. hxg3 fxg2 *
+
+
+[Event "FIDE Women's World Cup 2025 - Puzzle Pack: Priyanka K vs. Zsoka Gaal"]
+[Date "2025.07.09"]
+[Result "*"]
+[Variant "Standard"]
+[ECO "?"]
+[Opening "?"]
+[StudyName "FIDE Women's World Cup 2025 - Puzzle Pack"]
+[ChapterName "Priyanka K vs. Zsoka Gaal"]
+[ChapterURL "https://lichess.org/study/6lb13AlX/aSJdxyPL"]
+[Annotator "https://lichess.org/@/Lichess"]
+[FEN "4r1r1/pp1k1q2/7Q/3pB2P/2p3P1/2P2P2/PP1N4/R2K4 w - - 1 31"]
+[SetUp "1"]
+[UTCDate "2025.07.09"]
+[UTCTime "09:33:48"]
+[ChapterMode "gamebook"]
+
+{ Beautiful geometry! }
+31. Qd6+ Kc8 32. Qb8+ Kd7 33. Qc7+ Ke6 34. Qd6# *
+
+
+[Event "FIDE Women's World Cup 2025 - Puzzle Pack: Anahita Zahedifar vs. Govhar Beydullayeva"]
+[Date "2025.07.09"]
+[Result "*"]
+[Variant "Standard"]
+[ECO "?"]
+[Opening "?"]
+[StudyName "FIDE Women's World Cup 2025 - Puzzle Pack"]
+[ChapterName "Anahita Zahedifar vs. Govhar Beydullayeva"]
+[ChapterURL "https://lichess.org/study/6lb13AlX/tMNmnZMy"]
+[Annotator "https://lichess.org/@/Lichess"]
+[FEN "3r3k/7p/6p1/1PR1p3/4B3/1P3PPK/1r5P/8 w - - 10 44"]
+[SetUp "1"]
+[UTCDate "2025.07.09"]
+[UTCTime "09:38:07"]
+[ChapterMode "gamebook"]
+
+44. b6!! $18 (44. Bd5? $10 { Protecting the pawn, as in the game, allows Black to defend. For example: } 44... Rd6 { [%cal Gd6b6,Gb6b8] }) 44... Rxb3 45. b7 { And Black will eventually be in zugzwang. One line goes: } { [%cal Gc5c8] } 45... Kg7 46. Rc8 Rh8 47. g4 g5 48. Kg3 Rb2 49. h4 gxh4+ 50. Kxh4 Rf8 51. Kh3 Rg8 (51... Rh8 52. Rc7+ Kh6 53. g5+ Kxg5 54. Rc8 Rxb7 55. Rxh8 $18) 52. g5 Rf8 53. Bd5 Rh8 54. Kh4 { [%csl Ge5][%cal Gc8c7,Gc7h7] } *
+
+
+[Event "FIDE Women's World Cup 2025 - Puzzle Pack: Priyanka K vs. Zsoka Gaal"]
+[Date "2025.07.09"]
+[Result "*"]
+[Variant "Standard"]
+[ECO "?"]
+[Opening "?"]
+[StudyName "FIDE Women's World Cup 2025 - Puzzle Pack"]
+[ChapterName "Priyanka K vs. Zsoka Gaal"]
+[ChapterURL "https://lichess.org/study/6lb13AlX/jcEk5Y99"]
+[Annotator "https://lichess.org/@/Lichess"]
+[FEN "8/4kp2/8/1p1P4/3KP1N1/P6p/8/1n6 b - - 1 42"]
+[SetUp "1"]
+[UTCDate "2025.07.09"]
+[UTCTime "09:46:42"]
+[ChapterMode "gamebook"]
+
+42... Kd6!! { It is important both to provoke e5, denying the king and the knight use of that square, and to retain the Nxa3 tempo. } (42... Nxa3 43. Kc5? $10 Nc4 44. Kxb5 Nd6+ 45. Kc5 Nxe4+ 46. Kd4 f5 47. Nh2) 43. e5+ Kd7 44. Kc5 Nxa3 45. Nh2 Nc4! 46. Ng4 Ke7 47. d6+ (47. Kxb5 Nxe5!! { [%cal Gh3h2,Gh2h1] }) 47... Ke6 48. Kxb5 Nxe5 49. Nxe5 { Careful } 49... Kxd6 50. Nxf7+ Kd5 { There's no stopping the pawn. } *
+
+
+[Event "FIDE Women's World Cup 2025 - Puzzle Pack: Anahita Zahedifar vs. Govhar Beydullayeva"]
+[Date "2025.07.09"]
+[Result "*"]
+[Variant "Standard"]
+[ECO "?"]
+[Opening "?"]
+[StudyName "FIDE Women's World Cup 2025 - Puzzle Pack"]
+[ChapterName "Anahita Zahedifar vs. Govhar Beydullayeva"]
+[ChapterURL "https://lichess.org/study/6lb13AlX/6idUGWYY"]
+[Annotator "https://lichess.org/@/Lichess"]
+[FEN "4r2k/pRr2Qp1/3R3p/q3P3/5P2/6Pb/P1N4P/6K1 w - - 1 39"]
+[SetUp "1"]
+[UTCDate "2025.07.09"]
+[UTCTime "09:52:11"]
+[ChapterMode "gamebook"]
+
+{ The fastest win }
+39. Qxe8+ Kh7 40. Qg6+ Kg8 41. Rd8# *
+
+
+[Event "FIDE Women's World Cup 2025 - Puzzle Pack: Vaishali Rameshbabu vs. Tan Zhongyi"]
+[Date "2025.07.22"]
+[Result "*"]
+[Variant "Standard"]
+[ECO "?"]
+[Opening "?"]
+[StudyName "FIDE Women's World Cup 2025 - Puzzle Pack"]
+[ChapterName "Vaishali Rameshbabu vs. Tan Zhongyi"]
+[ChapterURL "https://lichess.org/study/6lb13AlX/O4RuH7mi"]
+[Annotator "https://lichess.org/@/Lichess"]
+[FEN "r2b1rk1/p4qp1/4p1np/PQ2n3/4P3/5NNP/1P3PP1/R1B1R1K1 w - - 1 22"]
+[SetUp "1"]
+[UTCDate "2025.07.22"]
+[UTCTime "07:12:38"]
+[ChapterMode "gamebook"]
+
+22. Ra3! { Defending the third rank and developing a piece } 22... Be7 23. Rb3 { The key tactical idea } 23... Rab8 24. Qxb8! Nxf3+ (24... Rxb8? 25. Rxb8+ Kh7 26. Nxe5 Nxe5 27. Rb7 $18) 25. Rxf3 Rxb8 26. Rxf7 Kxf7 { And White should win, though Black has decent drawing chances. } *
+
+
+[Event "FIDE Women's World Cup 2025 - Puzzle Pack: Humpy Koneru vs. Song Yuxin"]
+[Date "2025.07.22"]
+[Result "*"]
+[Variant "Standard"]
+[ECO "?"]
+[Opening "?"]
+[StudyName "FIDE Women's World Cup 2025 - Puzzle Pack"]
+[ChapterName "Humpy Koneru vs. Song Yuxin"]
+[ChapterURL "https://lichess.org/study/6lb13AlX/TJrru7sd"]
+[Annotator "https://lichess.org/@/Lichess"]
+[FEN "q4nk1/1b3r1p/p7/2p3Q1/Pp1p4/5NP1/1P3PBP/4R1K1 b - - 2 26"]
+[SetUp "1"]
+[UTCDate "2025.07.22"]
+[UTCTime "07:16:52"]
+[ChapterMode "gamebook"]
+
+26... Rg7! 27. Qh5 Ng6! { It is important to prevent Re8. } 28. Ng5 Bxg2 29. Nxh7 Bf3! { Re6 is a threat, so Black needs to gain a tempo. } 30. Nf6+ Kf7 31. Qf5 Ne7 32. Qe6+ (32. Qf4 Ng6 33. Qf5 Ne7) 32... Kf8 33. Nd7+ Ke8 { Black remains worse, but has survived the attack. } *
+
+
+[Event "FIDE Women's World Cup 2025 - Puzzle Pack: Divya Deshmukh vs. Harika Dronavalli"]
+[Date "2025.07.22"]
+[Result "*"]
+[Variant "Standard"]
+[ECO "?"]
+[Opening "?"]
+[StudyName "FIDE Women's World Cup 2025 - Puzzle Pack"]
+[ChapterName "Divya Deshmukh vs. Harika Dronavalli"]
+[ChapterURL "https://lichess.org/study/6lb13AlX/BgCjmdxN"]
+[Annotator "https://lichess.org/@/Lichess"]
+[FEN "5rk1/pq2r1pp/2pQ4/b1Pp4/P2B4/2P3RP/5PK1/6R1 w - - 4 30"]
+[SetUp "1"]
+[UTCDate "2025.07.22"]
+[UTCTime "07:22:23"]
+[ChapterMode "gamebook"]
+
+30. Rxg7+ (30. Bxg7 { Also woks }) 30... Rxg7+ 31. Bxg7 Qxg7+ (31... Kxg7 32. Kh1+ Kf7 (32... Kh8 33. Qxf8#) 33. Qe5 { [%cal Gg1g7] }) 32. Kf1 $18 (32. Kh1 { And even }) (32. Kh2 { work just as well, but in anticipation of the endgame, keeping the king closer to the center with 32. Kf1 makes more sense. }) *
+
+
+[Event "FIDE Women's World Cup 2025 - Puzzle Pack: Harika Dronavalli vs. Divya Deshmukh"]
+[Date "2025.07.22"]
+[Result "*"]
+[Variant "Standard"]
+[ECO "?"]
+[Opening "?"]
+[StudyName "FIDE Women's World Cup 2025 - Puzzle Pack"]
+[ChapterName "Harika Dronavalli vs. Divya Deshmukh"]
+[ChapterURL "https://lichess.org/study/6lb13AlX/7Xz89Y5M"]
+[Annotator "https://lichess.org/@/Lichess"]
+[FEN "8/1pn1k3/2p1p1p1/2P3P1/1PBPK3/6b1/3B4/8 w - - 14 63"]
+[SetUp "1"]
+[UTCDate "2025.07.22"]
+[UTCTime "07:24:04"]
+[ChapterMode "gamebook"]
+
+63. Bf4!! { Forcing the knight vs. bishop endgame, which should be winning for White. } 63... Bxf4 64. Kxf4 { [%cal Gf4e5,Gc4d3] } *
+
+

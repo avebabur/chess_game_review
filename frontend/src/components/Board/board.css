@@ -1,0 +1,43 @@
+/* Board container — keeps chessground square and responsive. */
+.cr-board {
+  width: 100%;
+  max-width: 560px;
+  margin-inline: auto;
+}
+.cr-board-inner {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow, 0 10px 34px rgba(0, 0, 0, 0.38));
+}
+
+/* chessground sizes to its wrapper */
+.cr-board-inner.cg-wrap {
+  display: block;
+}
+
+/* Refine coordinate labels to match the dark theme */
+.cr-board .cg-wrap coords {
+  font-size: 9px;
+  font-weight: 700;
+}
+.cr-board .cg-wrap coords.files coord { text-transform: lowercase; }
+
+/* --- Our own board image + Merida pieces (frontend/public) --- */
+.cr-board cg-board {
+  background-image: url('/board/blue2.jpg');
+  background-size: cover;
+}
+.cr-board piece.pawn.white   { background-image: url('/piece/merida/wP.svg'); }
+.cr-board piece.knight.white { background-image: url('/piece/merida/wN.svg'); }
+.cr-board piece.bishop.white { background-image: url('/piece/merida/wB.svg'); }
+.cr-board piece.rook.white   { background-image: url('/piece/merida/wR.svg'); }
+.cr-board piece.queen.white  { background-image: url('/piece/merida/wQ.svg'); }
+.cr-board piece.king.white   { background-image: url('/piece/merida/wK.svg'); }
+.cr-board piece.pawn.black   { background-image: url('/piece/merida/bP.svg'); }
+.cr-board piece.knight.black { background-image: url('/piece/merida/bN.svg'); }
+.cr-board piece.bishop.black { background-image: url('/piece/merida/bB.svg'); }
+.cr-board piece.rook.black   { background-image: url('/piece/merida/bR.svg'); }
+.cr-board piece.queen.black  { background-image: url('/piece/merida/bQ.svg'); }
+.cr-board piece.king.black   { background-image: url('/piece/merida/bK.svg'); }

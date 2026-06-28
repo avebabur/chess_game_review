@@ -1,0 +1,1112 @@
+# Golden candidates mined from human-annotated studies (scripts/mine_annotated_pgns.py).
+# Report-only until curated: add `mention:`/`avoid:` to score an entry.
+# `note:` holds the human annotator's own explanation for comparison.
+
+fen: rq2kb1r/3n1ppp/P2p4/2n5/3BP3/2N2P2/1PB1QP1P/R3K2R b KQkq - 2 17
+played: Qxb2
+note: [?? annotating_algauntt.pgn] A blunder. What is the refutation? - A: The refutation is 18.Nb5 because from there the Knight guards the d4-Bishop while the Bishop attacks the Black Queen and guards the a1-Rook. Black would lose the Queen for either the a1-Rook or could try ...Qb4 which loses the Queen to Bc3.
+
+fen: r3k1nr/ppp2ppp/2np4/2b1p2q/2B1PP2/1QP2P2/PP1P3P/RNBK3R w kq - 3 9
+played: Qxb7
+note: [?? annotating_algauntt.pgn] Threatening 10.Qxa8+ and 10.Qxc6+ ... and losing.
+
+fen: r1bq1b1r/4n1pp/p1p1k3/1p1np1B1/3P4/1BN2Q2/PPP2PPP/R3K2R b KQ - 1 12
+played: Qd6
+note: [? annotating_algauntt.pgn] Is Black looking at what his opponent will play next? What do you think of this move? What would be better? - A: Black should look at the position and see that White can play his Knight to e4, hence Black's Queen should not move to d6 because it would have to move again - Black loses Time. Better would be 12...Bb7. See the next line.
+
+fen: 2br2k1/1p2ppbp/rnnP2p1/p7/P4P2/Q1P1N3/1P4PP/3R1RK1 b - - 0 20
+played: Rxd6
+note: [? annotating_algauntt.pgn] Why is this a serious error? - A: Because Black could have played 20...exd6 and on 21.Rxd6 played 21...Bf8 22.Rxd8 Nxd8 23.Qb3 Bc5 with the initiative.
+
+fen: 2b3k1/1p3pbp/rnnQ2p1/p7/P4P2/2P1N3/1P4PP/5RK1 b - - 0 22
+played: Nxa4
+note: [? annotating_algauntt.pgn] Black gets that pawn back. Is this Black's best move? - A: No. Again Black could seize the initiative with 22.Bf8 23.Qc7 Bc5.
+
+fen: r1bq1rk1/p3bppp/1pn1pn2/2pp2B1/3P4/2PBPN2/PP1NQPPP/R4RK1 b - - 1 9
+played: cxd4
+note: [? annotating_algauntt.pgn] What is wrong with this move? Comment on the move 9...c4. - A: It half-opens the e-file for White after 10.exd4 and gives Black few options for plans. 9...c4 would be terrible. It would lock the center. White would just retreat his attacked d3-Bishop.
+
+fen: r2q1rk1/pb2bpp1/1pn1pn1p/3p4/3P3B/2PB1N2/PP1NQPPP/R4RK1 w - - 2 12
+played: Ne5
+note: [? annotating_algauntt.pgn] Right idea at the wrong moment. Based on your answer to what the theme should be for White, suggest some details of a plan instead of this move 12.Ne5. - A: White can place his pieces as Rfe1, Rad1, Bb1, Qd3. Ne5 might later be indicated depending on the moves actually made by both sides.
+
+fen: r3r1k1/pb3pp1/1p2p2p/3p4/3P4/B1Pn4/PP1N1PPP/R4RK1 b - - 3 17
+played: b5
+note: [? annotating_algauntt.pgn] Wanting to play ...a5 followed by ...b4, but what has Black overlooked? - A: His Knight is in danger.
+
+fen: r3r1k1/pb3p2/4pR2/1p1p2p1/3P4/B1Pn4/PP1N2PP/R5K1 b - - 1 20
+played: Nf4
+note: [? annotating_algauntt.pgn] What's a better move for Black? Analyze that.
+
+fen: r1bqkb1r/2pp1ppp/p1n2n2/1p2p3/3PP3/1B3N2/PPP2PPP/RNBQK2R b KQkq - 1 6
+played: Nxd4
+note: [? annotating_algauntt.pgn] This is a tactical error.
+
+fen: r1bq1b1r/2pp1kpp/p4n2/1p2N3/3nP3/8/PPP2PPP/RNBQK2R b KQ - 0 8
+played: Ke6
+note: [? annotating_algauntt.pgn] Moving into the center of the board is an error. Better was ...Kg8. See the next line.
+
+fen: r1bq1b1r/3p2pp/p3k3/1pp1N3/4n3/4Q3/PPP2PPP/RNB1K2R b KQ - 1 11
+played: Kxe5
+note: [?? annotating_algauntt.pgn] Black blunders by bringing his King even further up the board into White's territory. 11...Qg5 was better.
+
+fen: rnbqk2r/pp3ppp/4pn2/2b5/2p5/5NP1/PP1NPP1P/R1BQKB1R w KQkq - 0 7
+played: Bg2
+note: [?? annotating_algauntt.pgn] A developing move that misses the coming tactics.
+
+fen: rn1qk1nr/pbp2pbp/1p1pp1p1/8/2BPP2P/2P2N2/PP1N1PP1/R1BQK2R b KQkq - 0 7
+played: d5
+note: [? annotating_algauntt.pgn] An error in judgement of when to duck and when to punch. Black should have ducked with ...h5.
+
+fen: rnbqkbnr/ppp1pppp/8/3p4/2PP4/8/PP2PPPP/RNBQKBNR b KQkq - 0 2
+played: Nf6
+note: [?! annotating_algauntt.pgn] In the words of the Classical School - Black is about to give up the center.
+
+fen: 2r2k1r/p3qppp/1p2p3/1B6/4NQ2/8/PP3PPP/5RK1 b - - 0 18
+played: e5
+note: [? annotating_algauntt.pgn] Better was ...h6. Black has made a weakness of f7.
+
+fen: 5k1r/p1r1qppp/1p6/1B2pQ2/4NP2/8/PP4PP/5RK1 b - - 0 20
+played: exf4
+note: [? annotating_algauntt.pgn] Better to give back the pawn.
+
+fen: r1bq1k1r/pp2b1pp/2n1pn2/2pp2B1/3P3P/2N2N2/PPP1QPP1/2KR1B1R b - - 3 11
+played: b6
+note: [?? annotating_algauntt.pgn] A strategic blunder. Black's QB is needed to defend the e-pawn; so it would not be moving to b7. Black needed to continue to play in the center with ...cxd4. Also notice how this opens a diagonal leading to the undefended QR and weakens the QN and the light squares.
+
+fen: r1bq1k1r/p3b1pp/1pn1pn2/2pp2B1/3P3P/2N2NP1/PPP1QP2/2KR1B1R b - - 0 12
+played: Kf7
+note: [?? annotating_algauntt.pgn] Black wants to protect his weak e-pawn against the coming Bh3. This move is a tactical blunder per Stockfish! It is slightly complex and was not found by CMvCA.
+
+fen: r1bq3r/p3bkpp/1pn1pn2/2pp2B1/3P3P/2N2NP1/PPP1QP2/2KR1B1R w - - 1 13
+played: Bh3
+note: [? annotating_algauntt.pgn] Continuing the attack on the e-pawn but missing the tactical shot.
+
+fen: r1bqk1r1/pp3p1p/2n1pn1Q/2p5/3Pp3/P1P5/2P1NPPP/R1B1KB1R w KQq - 2 10
+played: Bb2
+note: [? annotating_algauntt.pgn] This is a really ugly move!
+
+fen: r1b1k1r1/pp3p1p/1qn1pn1Q/2p5/3Pp3/P1P5/1BP1NPPP/R3KB1R w KQq - 4 11
+played: Rb1
+note: [? annotating_algauntt.pgn] A "self pin". The b8-Rook is unprotected and the b7-Bishop can make no useful discovery.
+
+fen: r1b1k3/pp3p1p/1qn1pnrQ/2p5/3Pp3/P1P5/1BP1NPPP/1R2KB1R w Kq - 6 12
+played: Qh4
+note: [? annotating_algauntt.pgn] Better was Qc1 unpinning the Bishop.
+
+fen: r3k3/pp1b1p1p/1q2pnr1/8/3npN1Q/P7/1BP2PPP/1R2KB1R w Kq - 0 15
+played: Nxg6
+note: [?? annotating_algauntt.pgn] There was no time for this attempt to win the exchange.
+
+fen: rq2kb1r/3n1ppp/P2p4/2n5/3BP3/2N2P2/1PB1QP1P/R3K2R b KQkq - 2 17
+played: Qxb2
+note: [?? annotating_jomega.pgn] A blunder. What is the refutation? - A: The refutation is 18.Nb5 because from there the Knight guards the d4-Bishop while the Bishop attacks the Black Queen and guards the a1-Rook. Black would lose the Queen for either the a1-Rook or could try ...Qb4 which loses the Queen to Bc3.
+
+fen: r3k1nr/ppp2ppp/2np4/2b1p2q/2B1PP2/1QP2P2/PP1P3P/RNBK3R w kq - 3 9
+played: Qxb7
+note: [?? annotating_jomega.pgn] Threatening 10.Qxa8+ and 10.Qxc6+ ... and losing.
+
+fen: r1bq1b1r/4n1pp/p1p1k3/1p1np1B1/3P4/1BN2Q2/PPP2PPP/R3K2R b KQ - 1 12
+played: Qd6
+note: [? annotating_jomega.pgn] Is Black looking at what his opponent will play next? What do you think of this move? What would be better? - A: Black should look at the position and see that White can play his Knight to e4, hence Black's Queen should not move to d6 because it would have to move again - Black loses Time. Better would be 12...Bb7. See the next line.
+
+fen: 2br2k1/1p2ppbp/rnnP2p1/p7/P4P2/Q1P1N3/1P4PP/3R1RK1 b - - 0 20
+played: Rxd6
+note: [? annotating_jomega.pgn] Why is this a serious error? - A: Because Black could have played 20...exd6 and on 21.Rxd6 played 21...Bf8 22.Rxd8 Nxd8 23.Qb3 Bc5 with the initiative.
+
+fen: 2b3k1/1p3pbp/rnnQ2p1/p7/P4P2/2P1N3/1P4PP/5RK1 b - - 0 22
+played: Nxa4
+note: [? annotating_jomega.pgn] Black gets that pawn back. Is this Black's best move? - A: No. Again Black could seize the initiative with 22.Bf8 23.Qc7 Bc5.
+
+fen: r1bq1rk1/p3bppp/1pn1pn2/2pp2B1/3P4/2PBPN2/PP1NQPPP/R4RK1 b - - 1 9
+played: cxd4
+note: [? annotating_jomega.pgn] What is wrong with this move? Comment on the move 9...c4. - A: It half-opens the e-file for White after 10.exd4 and gives Black few options for plans. 9...c4 would be terrible. It would lock the center. White would just retreat his attacked d3-Bishop.
+
+fen: r2q1rk1/pb2bpp1/1pn1pn1p/3p4/3P3B/2PB1N2/PP1NQPPP/R4RK1 w - - 2 12
+played: Ne5
+note: [? annotating_jomega.pgn] Right idea at the wrong moment. Based on your answer to what the theme should be for White, suggest some details of a plan instead of this move 12.Ne5. - A: White can place his pieces as Rfe1, Rad1, Bb1, Qd3. Ne5 might later be indicated depending on the moves actually made by both sides.
+
+fen: r3r1k1/pb3pp1/1p2p2p/3p4/3P4/B1Pn4/PP1N1PPP/R4RK1 b - - 3 17
+played: b5
+note: [? annotating_jomega.pgn] Wanting to play ...a5 followed by ...b4, but what has Black overlooked? - A: His Knight is in danger.
+
+fen: r3r1k1/pb3p2/4pR2/1p1p2p1/3P4/B1Pn4/PP1N2PP/R5K1 b - - 1 20
+played: Nf4
+note: [? annotating_jomega.pgn] What's a better move for Black? Analyze that.
+
+fen: r1bqkb1r/2pp1ppp/p1n2n2/1p2p3/3PP3/1B3N2/PPP2PPP/RNBQK2R b KQkq - 1 6
+played: Nxd4
+note: [? annotating_jomega.pgn] This is a tactical error.
+
+fen: r1bq1b1r/2pp1kpp/p4n2/1p2N3/3nP3/8/PPP2PPP/RNBQK2R b KQ - 0 8
+played: Ke6
+note: [? annotating_jomega.pgn] Moving into the center of the board is an error. Better was ...Kg8. See the next line.
+
+fen: r1bq1b1r/3p2pp/p3k3/1pp1N3/4n3/4Q3/PPP2PPP/RNB1K2R b KQ - 1 11
+played: Kxe5
+note: [?? annotating_jomega.pgn] Black blunders by bringing his King even further up the board into White's territory. 11...Qg5 was better.
+
+fen: rnbqk2r/pp3ppp/4pn2/2b5/2p5/5NP1/PP1NPP1P/R1BQKB1R w KQkq - 0 7
+played: Bg2
+note: [?? annotating_jomega.pgn] A developing move that misses the coming tactics.
+
+fen: rn1qk1nr/pbp2pbp/1p1pp1p1/8/2BPP2P/2P2N2/PP1N1PP1/R1BQK2R b KQkq - 0 7
+played: d5
+note: [? annotating_jomega.pgn] An error in judgement of when to duck and when to punch. Black should have ducked with ...h5.
+
+fen: rnbqkbnr/ppp1pppp/8/3p4/2PP4/8/PP2PPPP/RNBQKBNR b KQkq - 0 2
+played: Nf6
+note: [?! annotating_jomega.pgn] In the words of the Classical School - Black is about to give up the center.
+
+fen: 2r2k1r/p3qppp/1p2p3/1B6/4NQ2/8/PP3PPP/5RK1 b - - 0 18
+played: e5
+note: [? annotating_jomega.pgn] Better was ...h6. Black has made a weakness of f7.
+
+fen: 5k1r/p1r1qppp/1p6/1B2pQ2/4NP2/8/PP4PP/5RK1 b - - 0 20
+played: exf4
+note: [? annotating_jomega.pgn] Better to give back the pawn.
+
+fen: r1bq1k1r/pp2b1pp/2n1pn2/2pp2B1/3P3P/2N2N2/PPP1QPP1/2KR1B1R b - - 3 11
+played: b6
+note: [?? annotating_jomega.pgn] A strategic blunder. Black's QB is needed to defend the e-pawn; so it would not be moving to b7. Black needed to continue to play in the center with ...cxd4. Also notice how this opens a diagonal leading to the undefended QR and weakens the QN and the light squares.
+
+fen: r1bq1k1r/p3b1pp/1pn1pn2/2pp2B1/3P3P/2N2NP1/PPP1QP2/2KR1B1R b - - 0 12
+played: Kf7
+note: [?? annotating_jomega.pgn] Black wants to protect his weak e-pawn against the coming Bh3. This move is a tactical blunder per Stockfish! It is slightly complex and was not found by CMvCA.
+
+fen: r1bq3r/p3bkpp/1pn1pn2/2pp2B1/3P3P/2N2NP1/PPP1QP2/2KR1B1R w - - 1 13
+played: Bh3
+note: [? annotating_jomega.pgn] Continuing the attack on the e-pawn but missing the tactical shot.
+
+fen: r1bqk1r1/pp3p1p/2n1pn1Q/2p5/3Pp3/P1P5/2P1NPPP/R1B1KB1R w KQq - 2 10
+played: Bb2
+note: [? annotating_jomega.pgn] This is a really ugly move!
+
+fen: r1b1k1r1/pp3p1p/1qn1pn1Q/2p5/3Pp3/P1P5/1BP1NPPP/R3KB1R w KQq - 4 11
+played: Rb1
+note: [? annotating_jomega.pgn] A "self pin". The b8-Rook is unprotected and the b7-Bishop can make no useful discovery.
+
+fen: r1b1k3/pp3p1p/1qn1pnrQ/2p5/3Pp3/P1P5/1BP1NPPP/1R2KB1R w Kq - 6 12
+played: Qh4
+note: [? annotating_jomega.pgn] Better was Qc1 unpinning the Bishop.
+
+fen: r3k3/pp1b1p1p/1q2pnr1/8/3npN1Q/P7/1BP2PPP/1R2KB1R w Kq - 0 15
+played: Nxg6
+note: [?? annotating_jomega.pgn] There was no time for this attempt to win the exchange.
+
+fen: 1r1qr1k1/p2b1ppp/1p2p3/b1pP4/P1Pn4/2N3P1/1B1P1PBP/3QRRK1 b - - 0 18
+played: a6
+note: [?! candidates2026.pgn] Insisting with the idea of playing b5, but it was prob better to eliminate the N at this point.
+
+fen: 4r1k1/5ppp/1p1q4/p2B4/PbPp3P/3P2P1/5P2/3Q1RK1 b - - 0 26
+played: Qf6
+note: [?! candidates2026.pgn] I guess Naka didn't sense the danger and was trying to speed up, considering Fabi was lower on time.
+
+fen: 4r1k1/5ppp/1p3q2/p2B4/PbPp2QP/3P2P1/5PK1/5R2 b - - 6 29
+played: Bc5
+note: [?! candidates2026.pgn] Final chance to play g6. After this, Hikaru will start to suffer a lot!
+
+fen: 8/2q1k1p1/1p3b1p/p2Q1B1P/P1Pp4/3P2P1/5P2/6K1 b - - 28 66
+played: Be5
+note: [?? candidates2026.pgn] In a very difficult position, Hikaru finally blunders.
+
+fen: 8/2q1k1p1/1p5p/p2QbB1P/P1Pp4/3P2P1/5P2/6K1 w - - 29 67
+played: f4
+note: [?? candidates2026.pgn] But Fabi misses! It was winning after:
+
+fen: 5k2/1Q4p1/1p1q1b1p/p4B1P/P1Pp1P2/3P2P1/6K1/8 w - - 5 70
+played: Kf3
+note: [? candidates2026.pgn] It was always better for W to put the B on g6, because it cuts and creates constant difficulties. At this point, it was clear that Caruana was not finding a clear path to victory.
+
+fen: 5k2/4q1p1/1p3b1p/p4B1P/P1PpQP2/3P1KP1/8/8 b - - 8 71
+played: Qxe4+
+note: [?? candidates2026.pgn] Not a good trade, at this point it was a better idea to keep Qs. on the board (again lol).
+
+fen: 8/3k2p1/1p5p/p2KPP1P/P1Pp2Pb/3B4/8/8 w - - 3 79
+played: f6
+note: [?? candidates2026.pgn] Crazy turn of events, Fabi goes for a line that throws away all the beautiful work that he has put. White was still winning after:
+
+fen: 8/3k4/1p2Pp1p/p2K3P/P1Pp2Pb/3B4/8/8 b - - 0 80
+played: Ke7
+note: [?? candidates2026.pgn] Oh no! After an epic effort, Hikaru misses the draw:
+
+fen: r1bq1rk1/pp2b1pp/2n5/3p1p1n/2pP4/2N1PNB1/PPB2PPP/R2Q1RK1 w - - 0 13
+played: Be5
+note: [?! candidates2026.pgn] This is already a slight mistake, White had to occupy the e5 square with the N if he wants to fight for something.
+
+fen: 4rrk1/p2qb1p1/2n1b2p/1p1pBp2/2pP1P1P/1P2RN2/P1B2PP1/R2Q2K1 w - - 0 21
+played: g3
+note: [?! candidates2026.pgn] Already failing to see anything concrete, Sindarov weakens his position with this move. At this point, it was very clear that Esipenko approach was a huge success. It was necessarily to stay active with:
+
+fen: 4rrk1/3q2p1/2n4p/bp1pBp1b/2pP1P1P/1P2RNP1/4QPK1/R2B4 b - - 1 27
+played: Bxf3+
+note: [? candidates2026.pgn] After playing a perfect game, Esipenko goes very wrong, despite having the right idea. It was better to
+
+fen: 5rk1/3q2p1/Rb5p/1p1pRp1Q/2pn1P1P/1P4P1/5PK1/3B4 b - - 0 31
+played: Qc6
+note: [?? candidates2026.pgn] But immediately collapses in a very difficult position. It was necessary to find:
+
+fen: r2q1rk1/pp3pb1/2np2pp/2pNp1N1/P3PPb1/2PP4/BP1Q2PP/R4RK1 b - - 0 15
+played: Kh8
+note: [?! candidates2026.pgn] A logical move, but ultimately a mistake. Black has spent 10 minutes on this move, likely going beyond her preparation. Now, White has a powerful idea.
+
+fen: r2q1r1k/pp3pb1/2np4/2p2Ppb/P3P1P1/2P1N3/BP1Q3P/R4RK1 b - - 0 20
+played: Ne5
+note: [?! candidates2026.pgn] Black played this move immediately in the game; however, transferring the bishop to f4, followed by moving the knight to e5, would have been more precise. I believe this was a critical position where White could have gained a better stance. Jiner didn’t capitalize on this moment and consequently lost the advantage.
+
+fen: r2r2k1/2p2ppp/p2q1b2/2R1n3/8/P3BN1P/1PQ2PP1/4R1K1 w - - 0 24
+played: Nxe5
+note: [?? candidates2026.pgn] Unbelievable! There was so much tension in the first round, or perhaps something else, but White missed a very simple trick.
+
+fen: r1bq1rk1/1p1nbppp/p1n1p3/2ppP3/3P1P2/2NBBN2/PPPQ2PP/R3K2R w KQ - 2 10
+played: O-O
+note: [?! candidates2026.pgn] After spending more than 10 minutes, Wei Yi goes wrong. This very natural move is already a bit unprecise. In order to fight for an edge, White has to play the following:
+
+fen: r1bq1rk1/4b1pp/ppn1pn2/2pp4/3P1P2/2NBBN2/PPPQ2PP/R4R1K w - - 0 13
+played: Ne5
+note: [?! candidates2026.pgn] Very natural but not precise. Wei Yi had better options like:
+
+fen: r1b2rk1/2q1b1pp/ppn1pn2/2ppN3/3P1P2/2NBB3/PPPQ2PP/4RR1K b - - 3 14
+played: Bd6
+note: [?! candidates2026.pgn] Pragg was probably a bit tempted to apply pressure against e5 due to d4 not being very stable, but 14...Bb7 was already simple and very good.
+
+fen: 2b2rk1/r5pp/ppqbpn2/2pp4/3P1P2/2N1BB2/PPPQ2PP/4RR1K b - - 3 17
+played: Raf7
+note: [?! candidates2026.pgn] Pragg misses his last real chance to seize the initiative. The pattern of releasing the tension with c4 was probably the best way to fight for more.
+
+fen: r3kb1r/pp1b1p1p/1qn1pp2/8/2Bp4/2P5/PP1N1PPP/R1BQR1K1 w kq - 1 13
+played: cxd4
+note: [?! candidates2026.pgn] After 20 minutes of thought, Kateryna played this move. It turns out that the queen on d4 will be quite annoying. From this point on, White started to go downhill in the next few moves.
+
+fen: r3kb1r/pp1b1p1p/2n1pp2/8/2Bq4/8/PP1N1PPP/R1BQR1K1 w kq - 0 14
+played: Ne4
+note: [?! candidates2026.pgn] It seems like a clever tactical move, but Black can easily defend the weakness on f6.
+
+fen: r3k2r/pp1bbpqp/2n1p3/5p2/2B5/2N2P2/PP2Q1PP/R1B1R1K1 w kq - 1 18
+played: Bf4
+note: [? candidates2026.pgn] It is a significant mistake to allow d4 for Black.
+
+fen: r3k2r/pp3p1p/2b1pb2/5p2/2q2B2/2N3QP/PP4P1/3RR2K b kq - 0 24
+played: h5
+note: [?! candidates2026.pgn] A logical move, but objectively it's a mistake. White has a valuable resource: the g6 square in a key variation; that's why the pawn is better placed on h7 than h5.
+
+fen: r3k2r/pp3p2/2b1pb2/5p1p/2q2B2/2N3QP/PP4P1/3RR2K w kq - 0 25
+played: h4
+note: [? candidates2026.pgn] Preventing h5-h4 comes with a high cost. The h4 pawn is a major weakness, making White's king much more vulnerable than before. Additionally, the g4 square is greatly weakened. In conclusion, this pawn push is a losing move
+
+fen: 2r1k2r/pp3p2/2b1p3/5pQp/2q4P/2N5/PP4P1/3RR2K w k - 1 28
+played: Rd2
+note: [? candidates2026.pgn] The goal is to double the rooks and overprotect the g2 pawn. However, this provided Black with another opportunity to secure her king and realize her material advantage.
+
+fen: 2r1k2r/pp3p2/2b1p3/5pQp/2q4P/2N5/PP1R2P1/4R2K b k - 2 28
+played: Qb4
+note: [? candidates2026.pgn] Preparing e7... It's too slow. White can now force a draw.
+
+fen: 2q5/rp3pk1/2pn2pp/r1Np4/PR1P4/4PQ1P/5PP1/1R4K1 b - - 3 34
+played: Ne4
+note: [? candidates2026.pgn] Losing patience, and this could cost the game!
+
+fen: 2q5/1R3pk1/2p3pp/r1Np2n1/P2P4/4PQ1P/5PP1/6K1 w - - 1 37
+played: Qg3
+note: [? candidates2026.pgn] White was seeking a quick tactical solution instead of a technical approach.
+
+fen: 2rq1rk1/p2nppb1/6pp/1Q6/6P1/2N2N1b/PP1PPP1P/R1B1K1R1 b Q - 0 16
+played: Rc5
+note: [?! candidates2026.pgn] After deliberating for 30 minutes, Wei Yi makes his first mistake. This natural move actually helps White by letting the Q get to b3. Better was:
+
+fen: 3q1rk1/p2nppb1/6pp/2r5/6P1/1QN2N1b/PP1PPP1P/R1B1K1R1 b Q - 2 17
+played: Ne5
+note: [? candidates2026.pgn] The final mistake and game over. Wei needed to hit the g4 pawn in order to keep the fight going.
+
+fen: r1b1r1k1/pp4pp/4p1q1/2b2p2/2P5/3BPNN1/2Q3PP/R2K3R w - - 2 19
+played: Qc3
+note: [?! candidates2026.pgn] This is a turning point. Pragg tried Qc3 to prevent Black from playing e5, but it will not work as shown. Better was:
+
+fen: r1br2k1/pp2q1pp/8/2b2p2/2P1p3/2Q1P1N1/2BN2PP/R1K1R3 w - - 6 24
+played: Re2
+note: [?! candidates2026.pgn] Very natural but not precise. It was better for White to play:
+
+fen: 2br2k1/1p2q1pp/r7/p4p2/1bPNp3/4P1N1/1QB1R1PP/R1K5 b - - 3 27
+played: Qg5
+note: [?! candidates2026.pgn] Maybe his first innacuracy, if we could call it.
+
+fen: 2r3k1/1p1b2p1/1r6/p4pq1/1bPNp2p/4P3/KQBNR1PP/3R4 w - - 6 33
+played: c5
+note: [?? candidates2026.pgn] Sadly, Pragg will not be able to activate his pieces well enough.
+
+fen: r2qkbr1/1p2pp2/p1np1n1p/8/3PP1b1/Pp3N2/1BPN1PP1/R2QRBK1 b q - 1 14
+played: d5
+note: [? candidates2026.pgn] Played after 23 minutes. This is a serious mistake, since white has a very strong move that aims to open up the position totally.
+
+fen: 2rqkbr1/1p2pp2/p1n4p/8/2PP4/Pp2RN2/1Bb2PP1/R1Q2BK1 w - - 5 20
+played: d5
+note: [? candidates2026.pgn] Anyway, Black played for ♞a5, so this is simply provoking it. White still needed to admit her previous queen move misstep and improve her queen to d2.
+
+fen: r1bqr1k1/p4pp1/1bp2n1p/8/1nBP3B/2N2N2/PP1Q1PPP/3R1K1R b - - 1 15
+played: Ba6
+note: [? candidates2026.pgn] Going in the wrong direction. The black knight loses valuable time, moving far away from the key d5 square.
+
+fen: r2qr1k1/p4pp1/nbp2n1p/8/3P3B/2N2N2/PP1Q1PPP/3R1K1R w - - 0 17
+played: g4
+note: [?! candidates2026.pgn] The idea is ambitious, but not very practical.
+
+fen: r2qr1k1/p4pp1/1bp4p/3n2Pn/3P3B/2N2N2/PP1Q1P1P/3R1KR1 w - - 1 20
+played: Rg4
+note: [?? candidates2026.pgn] White is trying to take full control over Black activities, but it works the opposite way!
+
+fen: 7k/p1b1r1p1/2Nr1p2/3p2pn/8/1Q2Pq2/PP3BR1/2R3K1 b - - 1 34
+played: Rf7
+note: [? candidates2026.pgn] Black had two winning opportunities, but in both cases, they required sacrificing an exchange!
+
+fen: 7k/p1b2rp1/3r1p2/3p2pn/3N4/1Q2Pq2/PP3BR1/2R3K1 b - - 3 35
+played: Qe4
+note: [?? candidates2026.pgn] This is a huge tactical blunder.
+
+fen: 8/p1Q3pk/1r6/3p1ppn/3N4/1P2P3/P4BRK/1q6 w - - 0 41
+played: Qf7
+note: [? candidates2026.pgn] And White firstly missed a simple win after:
+
+fen: 8/p4Qpk/5r2/3p1ppn/3N4/1P2P3/P4BRK/1q6 w - - 2 42
+played: Qxd5
+note: [?? candidates2026.pgn] And now, blundering the whole game! We have a very spectacular puzzle now: Black is starting and winning!
+
+fen: r2qkbr1/5p1p/p1b1pp2/8/Pp1P4/3B2P1/1P2QP1P/R1B2RK1 b q - 0 17
+played: f5
+note: [?! candidates2026.pgn] In a difficult position and with pressure on the clock, Caruana plays it wrong. It was better to accept the pawn, despite White's position looking easier to play.
+
+fen: r2q1k2/4bp1p/B3p3/3b1p2/Pp1P2r1/4B1P1/1P2QP1P/2R2RK1 w - - 1 22
+played: Bb5
+note: [?! candidates2026.pgn] Possibly his only inaccuracy in the whole game. Going back to c4 was good, as the pawn on a4 cannot be captured.
+
+fen: r2q1k2/4bp1p/4p3/1B1b1p2/Pp1P2r1/4B1P1/1P2QP1P/2R2RK1 b - - 2 22
+played: Bf6
+note: [?! candidates2026.pgn] With less than 10 minutes, Caruana doesn't find the best way to fight here.
+
+fen: 2rq3r/1pkbbp1p/p1npp3/7N/1PP1N3/3B4/P3QPPP/R2R2K1 b - - 0 16
+played: Nxb4
+note: [?! candidates2026.pgn] After spending close to 15 mins, Anish again accepts the challenge. But this time I'm not entire conviced it is the right decision. White's initiative is going to get pretty strong now.
+
+fen: 2rq3r/1pkbbp1p/p2pp3/7N/2P1N3/3n4/P3QPPP/1R1R2K1 w - - 0 18
+played: Qxd3
+note: [? candidates2026.pgn] Huge mistake that changes everything! Andrey captures with the wrong piece, missing Black's next move and turning the game around.
+
+fen: rnbq1rk1/1pp3pp/1b1p1p2/p2P4/3P4/P3BN2/1P3PPP/R2QKB1R w KQ - 2 12
+played: h4
+note: [?! candidates2026.pgn] Divya played this move quickly, but based on my analysis, it seems questionable. Black has the opportunity to gain a strong position here. Instead, she should have played ♗d3, ♕c2. It appears that she may have confused the opening lines.
+
+fen: rnb1qrk1/1pp3pp/1b1p4/p2P1p2/3P3P/P3BNP1/1P3P2/R2QKB1R w KQ - 1 14
+played: Bd3
+note: [?! candidates2026.pgn] The issue with this move is that the pawn on d5 is rather weak, and the bishop would be better positioned on c4 where it can protect it.
+
+fen: r1b1qrk1/1ppn2pp/1b1p4/p2P1p2/3P3P/P2BBNP1/1P3P2/R2QK2R w KQ - 3 15
+played: O-O
+note: [? candidates2026.pgn] This is clearly a wrong strategy. In a few moves, Divya has lost the d5 pawn. Instead, she needed to go for a dynamic line with h4-h5, ♘h4.
+
+fen: r3k2r/1pp1bppp/p1pqbn2/4p3/P3P3/N2P1N2/1PP2PPP/R1BQ1RK1 b kq - 2 9
+played: h6
+note: [?! candidates2026.pgn] Seems like a waste of time.
+
+fen: 2k4r/2p2pp1/1nNb3q/1P2p2p/2PPP3/4Q3/5PPP/R5K1 b - - 0 28
+played: exd4
+note: [?? candidates2026.pgn] It could be explained by tiredness after the first rounds. Sometimes chess players make the "second move" of a variation they were going to play. Obviously, Black should trade queens first.
+
+fen: r1b2rk1/pp2nppp/n1pBp3/6q1/2P5/5BN1/PP3P1P/R2QK2R w KQ - 6 13
+played: h4
+note: [?! candidates2026.pgn] After the match, Hikaru admitted that he didn't have 0-0 as a potential move in his prep. Facing such a complex position with no prep is a true nightmare for any player.
+
+fen: r1b1r1k1/pp3ppp/2nB4/q1p2p2/2P2Q1P/5B2/P4P2/3R1RK1 w - - 2 20
+played: Kh1
+note: [?! candidates2026.pgn] Not the right square for the K, as we will see in the analysis. Better was:
+
+fen: r1bq1rk1/pp3pbp/2p3p1/3p1P2/4n1P1/2PBNQ2/PPPB3P/2KR3R b - - 2 14
+played: Re8
+note: [?! candidates2026.pgn] After this very natural move, Black's position will start getting extremely hard to handle. Better was:
+
+fen: r1bq2k1/pp3p1p/2p3p1/3pbP2/4r1PP/2P1NQ2/PPPB4/2KR3R w - - 1 17
+played: c4
+note: [?! candidates2026.pgn] Probably Caruana's only inaccuracy. Fabi was already focused and applying pressure, but in reality it was better to consolidate his K first.
+
+fen: r1b3k1/pp3p1p/1qp3p1/3pbP2/2P1r1PP/2P1NQ2/PP1B4/2KR3R b - - 0 18
+played: Qa5
+note: [? candidates2026.pgn] Very natural try, but Black desperately needed to bring his pieces to work. The 8th rank is too weak.
+
+fen: 2rq1rk1/1p1bppbp/3p1np1/p7/Pn2P2P/1NN1BP2/1PPQ2P1/1K1R1B1R b - - 0 13
+played: Nh5
+note: [?! candidates2026.pgn] Let's take a look at the sacrifices.
+
+fen: 2rq1rk1/1p1bppbp/3p2p1/p6n/Pn1BP2P/1NN2P2/1PPQ2P1/1K1R1B1R b - - 2 14
+played: e5
+note: [? candidates2026.pgn] This move is a serious mistake. Black wants to keep the dark-squared bishop at all costs and goes for sacrifices, overlooking White's strong response a few moves later.
+
+fen: r2q1rk1/p2n1pb1/Pppp2pp/8/2PpPP2/3P4/1P2N1PP/R1BQ1RK1 b - - 0 15
+played: f5
+note: [? candidates2026.pgn] Vaishali aims to prevent White from playing f5. However, this advance weakens the kingside and gives White additional chances there.
+
+fen: r2q1rk1/p2n2b1/Pppp2pp/5p2/2PpPP2/3P2N1/1P4PP/R1BQ1RK1 b - - 1 16
+played: Nc5
+note: [?! candidates2026.pgn] Black should have taken on e4.
+
+fen: r5k1/1p3p1p/3pq1r1/2p1p2Q/1P1bP2B/P2R3P/5PP1/3R3K w - - 0 26
+played: f4
+note: [?! candidates2026.pgn] Wei Yi tries his best to stay active, but not at the right moment.
+
+fen: r5k1/1p3p1p/3pq1r1/2p5/1P1bPp1B/P2R1Q1P/6P1/3R3K b - - 1 27
+played: Re8
+note: [?! candidates2026.pgn] Trying to take advantage of Wei's clock issues, Sindarov plays fast and allows White to get back into the game.
+
+fen: 4r1k1/1p3p1p/3p2r1/2p5/1P2qp2/P2R3P/5QP1/3R3K w - - 0 30
+played: Rxd6
+note: [?? candidates2026.pgn] With time trouble approaching, Wei Yi chooses the wrong pawn. White had very good chances to defend after:
+
+fen: rnbq1rk1/p2p1ppp/1p3n2/b1pp4/2P5/P1N1P3/1P1BNPPP/R2QKB1R w KQ - 0 9
+played: Nxd5
+note: [?! candidates2026.pgn] In this event, Hikaru has not been very impressive with his opening choices. As a result of this, he has not been able to put his opponents in any sort of difficulty. In my opinion, a better option was to capture with the pawn:
+
+fen: 3r1rk1/1pp1q2p/p3npp1/4p3/1n2P2P/1PNP1N2/1PPQ1RP1/5R1K w - - 1 22
+played: Nh2
+note: [? candidates2026.pgn] White aims to bring the knight to g4 to put pressure on Black's position, but in doing so removes the knight controlling d4, allowing ...Nd4, attacking the c2-pawn.
+
+fen: 5rk1/1pp4p/p5p1/4p2q/4P3/1P1PN3/1PQ4N/7K b - - 1 32
+played: c6
+note: [? candidates2026.pgn] Suddenly, this natural move allows White to activate the queen and generate counterplay.
+
+fen: 4rrk1/p5pn/1p1pbq1p/n1p4Q/2PPp3/1BP1B2P/P4PPN/3RR1K1 w - - 6 19
+played: Qe2
+note: [? candidates2026.pgn] An important moment in the game. White's c4-pawn is under attack, and it seems natural to defend it with the queen. However, this allows ...Qf7, increasing the pressure on c4 and forcing d5, after which the position becomes more closed - something that does not favour the side with the bishop pair. White is left with weak c3- and c4 - pawns and no real counterplay.
+
+fen: 2b2rk1/p3rqpn/1p1p4/n1pP3p/B1P1p3/2P1B2P/P2NQPP1/3RR1K1 b - - 1 23
+played: Qf6
+note: [?! candidates2026.pgn] Now this move is an inaccuracy.
+
+fen: 5rk1/p3r1pn/1p1p4/n1pP1b1p/2P1p2q/2P1B2P/P1BNQPP1/2R1R1K1 w - - 6 26
+played: Nb3
+note: [? candidates2026.pgn] This is a serious mistake. White needs the knight on d2, closer to the kingside and targeting the e4-pawn, which prevents Black from bringing the knight to g5 and creating decisive threats against White king.
+
+fen: 5rk1/p3r1pn/1p1p4/n1pP1b1p/2P1p2q/1NP1B2P/P1B1QPP1/2R1R1K1 b - - 7 26
+played: Nb7
+note: [? candidates2026.pgn] Vaishali misses the chance to bring the knight into the attack, which would have been very strong.
+
+fen: 5rk1/pn5n/1p1p2p1/2pPrb1p/P1P1p2q/1NP1B2P/4QPP1/2RBR1K1 w - - 1 29
+played: Qd2
+note: [? candidates2026.pgn] Already short of time, Kateryna does not find the best defence.
+
+fen: 6k1/pn3r1n/1p1p2pB/2pPr2p/P1P4q/1NPQRp2/2B2P2/2R3K1 b - - 1 34
+played: Rff5
+note: [?? candidates2026.pgn] With very little time on the clock, Vaishali fails to find the only winning continuation and makes a blunder.
+
+fen: 6k1/pn6/1p1p2p1/2pPr1rp/P1P5/1NPQ2Rq/2B2P2/2R3K1 w - - 2 38
+played: Qf1
+note: [?? candidates2026.pgn] Under time pressure, Kateryna fails to find an accurate defence.
+
+fen: r1bq1rk1/ppp3pp/3b1p2/3p1n2/3P1B2/2P2P2/PP2NQPP/R3KB1R w KQ - 1 14
+played: Bd2
+note: [? candidates2026.pgn] Very serious mistake. Looking at how fast Esipenko was still playing, makes me believe that he probably saw a similar position where the trade had to be avoided. And indeed, he was right! But he needed to castle first, as we will see:
+
+fen: 8/1r1b1k2/3r1p2/2Rp2p1/3N2P1/1P3P2/5K1R/8 b - - 8 38
+played: Kg7
+note: [?! candidates2026.pgn] After playing close to perfect, Anish finally gives Sindarov a chance to get a real advantage!
+
+fen: 4nrk1/p4pbp/3p2p1/qrp1P3/P2P1P2/6N1/1P1N2PP/R1BQ2K1 w - - 0 21
+played: Nb3
+note: [? candidates2026.pgn] After this move, Black seizes the initiative with strong play.
+
+fen: 5rk1/p4pbp/3n2p1/8/P4P2/3pB3/1P2qQPP/R4NK1 b - - 1 27
+played: Ne4
+note: [? candidates2026.pgn] After spending a reasonable amount time, Tan goes wrong. There are many good moves in this position, leading to a win. Here is one of them,
+
+fen: 8/5pk1/R4bp1/p6p/r4P2/4BK2/6PP/8 b - - 3 37
+played: Ra1
+note: [?? candidates2026.pgn] But now comes a shocking blunder...
+
+fen: 5rk1/4bppp/r1p1p3/pq6/4PB2/2P5/P1Q2PPP/3R1RK1 b - - 5 18
+played: Bc5
+note: [?! candidates2026.pgn] This move seems somewhat unnatural, because Black could have introduced the Ra6 into the game by finding a nicer position for the piece.
+
+fen: 5rk1/4qppp/r1p1p3/p1b1B3/2P1P3/3Q4/P4PPP/3R1RK1 b - - 4 21
+played: f6
+note: [?! candidates2026.pgn] The computer says the move is not a losing one, but we are human. Caruana himself weakens the 7th rank.
+
+fen: 6k1/R5pp/1rp2p2/p7/2P1P3/7P/r4PP1/5RK1 b - - 0 28
+played: h5
+note: [?? candidates2026.pgn] It’s really hard to find the correct way, and Fabiano is losing.
+
+fen: rn1q1rk1/p1p1bppp/bn2p3/4P3/P1pP4/N4N2/1P2BPPP/R1BQ1RK1 b - - 2 11
+played: c5
+note: [?! candidates2026.pgn] An inaccuracy. White made the strongest moves, and at that moment it was necessary to remember the development of the pieces.
+
+fen: rn1q1rk1/p3bppp/b3p3/P1pnP3/2BP4/N4N2/1P3PPP/R1BQ1RK1 b - - 0 13
+played: Qxa5
+note: [? candidates2026.pgn] This natural move is a mistake, after which the Dutchman provides for a solid advantage.
+
+fen: 1r4k1/3b1pp1/1q5p/p1rpP3/3N1P2/1P5P/3Q2PK/R2R4 b - - 0 29
+played: f6
+note: [? candidates2026.pgn] A weird decision. Black weakens the king, but gets nothing in return.
+
+fen: 1r4k1/3b2p1/1q3p1p/p1rpP3/3N1P2/1P5P/3Q2PK/R3R3 b - - 1 30
+played: Re8
+note: [? candidates2026.pgn] The rook on e8 occupies the square needed for the bishop.
+
+fen: 4r1k1/2q3p1/7p/2rpP3/b2N4/7P/3QR1P1/4R2K b - - 1 35
+played: Qf7
+note: [? candidates2026.pgn] A crucial mistake, after which Black's position can no longer be saved.
+
+fen: r2q1rk1/bpp2ppp/3pb1n1/p3p3/3PPn2/2PB1N1P/PP3PP1/R1BQRNK1 w - - 5 14
+played: Ng3
+note: [?! candidates2026.pgn] An odd decision. White had to keep the bishop
+
+fen: r2q1rk1/bpp2ppp/3pb1n1/4p3/p2PP3/2PQ1NNP/PP3PP1/R1B1R1K1 w - - 0 16
+played: d5
+note: [?! candidates2026.pgn] This move takes the pressure in the center away.
+
+fen: 8/2pb2pk/1q1p1p1p/3Pp3/1pP1P3/1P2P2P/r5PK/2RQN3 w - - 0 34
+played: Nc2
+note: [? candidates2026.pgn] Perhaps this is the only move that might be considered as a serious mistake, after which White is close to lose.
+
+fen: 8/2p3pk/1q1p1pbp/3Pp3/1pP1P3/1P1QP2P/6PK/N7 b - - 0 37
+played: c5
+note: [?! candidates2026.pgn] After this option, White had a great chance for a draw, but Caruana didn't take the advantage. But I must say that it's not easy to find this option.
+
+fen: 8/6pk/1q1p1pbp/2pPp3/1pP1P3/1P1QP2P/6PK/N7 w - c6 0 38
+played: Kg3
+note: [?? candidates2026.pgn] Fabiano is missing a lucky strike. Now the game ends very quickly.
+
+fen: r3nrk1/1bp2ppp/pq2p3/2n3P1/2B1PP2/2N5/PP1NQ2P/2KR3R w - - 1 17
+played: Bb3
+note: [?! candidates2026.pgn] Bluebaum is losing the thread of the game. White wouldn’t need this move at all.
+
+fen: rr4k1/2p2ppp/1qb1p3/6P1/P2QPP2/8/P1B4P/2KR3R b - - 0 24
+played: Bxa4
+note: [?? candidates2026.pgn] It is really surprising that such a brilliant tactical player as Sindarov immediately went to trading queens.
+
+fen: 2r1q1k1/6pp/b1Nbpr2/p1nP1p2/2PQpP2/4P1PP/PB1R2B1/2R3K1 b - - 4 21
+played: Rg6
+note: [? candidates2026.pgn] This mistake gives White an even bigger advantage. Black should have stuck to her original plan of exchanging the bishop.
+
+fen: 2r1q1k1/6pp/b1Nbp1r1/p1nP1p2/2PQpP2/4P1PP/PB1R2BK/2R5 b - - 6 22
+played: Nd3
+note: [? candidates2026.pgn] This leads to a brilliant exchange sacrifice, giving White the chance to create two incredibly strong connected passed pawns in the center. It was better just to wait by playing 22...Rf6 or even 22...Kh8.
+
+fen: r2qrbk1/pb3p1p/2n2p2/1Npp4/8/1P1BPN2/P4PPP/2RQ1RK1 b - - 1 15
+played: Ne5
+note: [?! candidates2026.pgn] This is probably not the best move; it would have been better to sacrifice a pawn to centralize the pieces.
+
+fen: r3rbk1/pb3p1p/8/2ppp3/4P3/1PNB4/P4PPP/2RR2K1 b - - 0 20
+played: dxe4
+note: [?! candidates2026.pgn] This looks like a big inaccuracy, as White manages to reach a very favorable endgame with a good knight against a bad bishop.
+
+fen: r1b2k2/ppp1q3/7r/4P3/4QR2/2P1P1Pp/P6P/3R2K1 b - - 0 21
+played: Kg8
+note: [?! candidates2026.pgn] This move won’t lead to an immediate surrender, but now Black needs to proceed extremely carefully not to be instantly defeated.
+
+fen: r1b3k1/ppp1q3/7r/4P3/4QR2/2P1P1Pp/P6P/5RK1 b - - 2 22
+played: Bd7
+note: [?? candidates2026.pgn] Unfortunately for Pragg's fans, this move is literally a white flag and a quick loss.
+
+fen: r4rk1/pppq1pb1/2np2pp/3N4/4P3/7P/PPPBQPP1/R3R1K1 b - - 4 17
+played: f5
+note: [?! candidates2026.pgn] This feels a bit premature and gives White a chance to seize an advantage. It was probably better to play 17...Ne7 and try to exchange the central knight.
+
+fen: 8/4R1pp/1r2bpk1/4p3/2p5/2N2PP1/P3PK1P/8 w - - 5 31
+played: g4
+note: [?! candidates2026.pgn] An odd decision by Fabi. He let Black trade a pair of pawns that had a decisive role in Black's counterplay, as the black king would have a path to reach the kingside pawns.
+
+fen: r1r5/1p1nkpp1/p2nb2p/3p4/3N2P1/3NPP2/PP2BK1P/2RR4 b - - 0 24
+played: g5
+note: [?! candidates2026.pgn] Not the best choice. Black gives White an additional target to attack. Don't push your pawns where you are weaker!
+
+fen: r1r5/1p1nkp2/p2nb2p/3p2p1/3N2PP/3NPP2/PP2BK2/2RR4 b - - 0 25
+played: Nc4
+note: [? candidates2026.pgn] This pseudo-active move brings Black into more trouble. It was somewhat better to prevent the white knight from its potential jumps on b4
+
+fen: r6r/1p2kp2/p1n1b2p/3p2p1/3N2PP/4PPK1/PP2B3/3R3R w - - 4 30
+played: Nxe6
+note: [?! candidates2026.pgn] Slipping away the lion's share of the advantageous gameplay. Sad to see how the surgical precision doesn't pay off because of a single mistake. White should have continued with their attack against Black's kingside by playing
+
+fen: 4r1k1/1pr2pp1/1pb2n1p/2ppR3/3P4/P1P1P2P/1P1NB1P1/5RK1 w - - 2 25
+played: Rff5
+note: [?! candidates2026.pgn] And this is another key moment of the game. White is trying to bring complications into the battle, but it works exactly to the black side's advantage.
+
+fen: 5k2/1pr2p2/5npp/2pbR3/8/P3P2P/1P1NB1P1/6K1 w - - 0 30
+played: Bc4
+note: [?? candidates2026.pgn] White became nervous while trying to solve the rook problem quickly, which led to disaster.
+
+fen: 3q1rk1/1p2ppbp/p1rp1np1/8/2P1P3/1PN5/PB3PPP/R2QR1K1 w - - 4 14
+played: Nd5
+note: [?! candidates2026.pgn] It's a very simple way to play, and Black is quite comfortable in this position.
+
+fen: 2rr4/1p3k2/p1n1p3/P2p1p1p/2P2P1P/1PK5/2NR2P1/4R3 w - - 0 39
+played: cxd5
+note: [?! candidates2026.pgn] In time trouble, White is missing Black's strong counterplay, based on the improvement of Black's knight, which is rather annoying on d5.
+
+fen: r2q1rk1/1p2b2p/2p3p1/p2n1p2/2QPN3/2P2R2/PP1B2PP/R5K1 w - - 0 19
+played: Nc5
+note: [?! candidates2026.pgn] With a very promising bishop-knight trade.
+
+fen: 1r4k1/5q1p/7B/2P3p1/p4p2/8/PP1Q2PP/6K1 w - - 0 31
+played: c6
+note: [?? candidates2026.pgn] This one leads to an immediate loss.
+
+fen: 3r2k1/7p/2q5/7P/p4B2/5PK1/1P2Q3/8 b - - 0 43
+played: Kf7
+note: [? candidates2026.pgn] Blows up nearly all the advantage.
+
+fen: 6r1/7k/6qp/8/8/1Q3PB1/1P5K/8 w - - 4 56
+played: Qb7+
+note: [?! candidates2026.pgn] An inaccuracy. f4 was best.
+
+fen: r3kb1r/pq1n1pp1/2n1p2p/2ppP2P/Q7/3P1N2/PP1BNPP1/2R2RK1 b kq - 3 15
+played: Rb8
+note: [? candidates2026.pgn] This is Black’s first mistake—the rook isn’t well placed on b8, as we’ll see in the following variations.
+
+fen: 1r2k3/3nbp2/p1q1p1rp/4P3/1npP1Q2/4BN2/PR2NPP1/5RK1 w - - 4 26
+played: Rfb1
+note: [? candidates2026.pgn] This is a miscalculation. The passed pawn has started to become quite dangerous, so White should have played more carefully.
+
+fen: 4kn1Q/1q2bp2/p3p1r1/3nP3/P2B3p/1p3N2/4NPP1/1R5K w - - 0 36
+played: Nc1
+note: [?? candidates2026.pgn] This is the final blunder in an already pretty difficult position.
+
+fen: 1r1q1bk1/R1p2pp1/7p/4r3/1p1pP3/3Q3P/1PPB1PP1/4R1K1 b - - 1 24
+played: b3
+note: [? candidates2026.pgn] Probably, this is a miscalculation.
+
+fen: 5k2/1R3pp1/7p/8/4P2P/6K1/1Pr3P1/8 b - - 2 37
+played: Rc6
+note: [? candidates2026.pgn] In rook endgames, the right decisions don’t come easily. Black should have tried to create at least some counterplay on the kingside by pushing the pawns and activating the king. Since White’s typical plan is to bring the king to support the pawn, Black needed to be better prepared for that.
+
+fen: r2qr1k1/pp1n1ppp/2n5/2b5/3pPB2/3B2NP/PP3PP1/R2Q1RK1 w - - 3 15
+played: a3
+note: [?! candidates2026.pgn] A slowdown allowing Black to equalize the game.
+
+fen: 2r2rk1/p5pp/4q3/2pp4/2b4P/PN2pPB1/6PK/2RQR3 b - - 13 34
+played: Rfe8
+note: [? candidates2026.pgn] Not obvious that it's a mistake, but it leads to losing for Black.
+
+fen: 2b2r2/2p3pk/7p/1P2N3/pqPP4/3R1PP1/8/5QK1 w - - 5 40
+played: g4
+note: [?! candidates2026.pgn] This appears good, but it allows Black’s queen to become active.
+
+fen: 8/p2k2p1/3p1p2/1P5p/P1b4P/2B1KP2/2P3P1/8 b - - 9 32
+played: a6
+note: [?! candidates2026.pgn] This is an inaccuracy, allowing White to create a passed pawn and making the position harder to defend.
+
+fen: r2qr1k1/1bp2pp1/p1nbpn1p/1p4N1/3P3P/P1N1P3/BPQB1PP1/R3K2R w KQ - 2 14
+played: O-O-O
+note: [?? candidates2026.pgn] It’s highly likely that Bluebaum has messed up with his preparation. Unfortunately, the move makes White lose instantly.
+
+fen: r1bq1rk1/1p2ppbp/p1np1np1/6B1/3NP3/2NQ4/PPP1BPPP/2KR3R w - - 6 10
+played: Nb3
+note: [?! candidates2026.pgn] Oops, Andrey seems to have forgotten his preparation…
+
+fen: 2rq1rk1/1p2ppbp/p2pbnp1/4n1B1/4P3/1NN1Q3/PPP1BPPP/1K1R3R w - - 12 13
+played: h3
+note: [? candidates2026.pgn] A mistake that involves Maestro Caruana to offer us a brilliant Sicilian masterclass.
+
+fen: 5rk1/2qnppbp/p2pbnp1/1p4B1/3RPP2/1NP1Q2P/P1P1B1P1/1K5R w - - 0 17
+played: g4
+note: [? candidates2026.pgn] A snail-slow move. White has no time for such ideas, it has to be something swift to get any counterplay.
+
+fen: r1bq1rk1/p3ppbp/2p2np1/3p4/2B1P3/2N1BP2/PPPQ2PP/2KR3R b - - 1 11
+played: Be6
+note: [?! candidates2026.pgn] This move has a bad reputation for Black.
+
+fen: r5k1/5pb1/1q4p1/3Rp1P1/4Q3/1P6/rBP4P/1K1R4 b - - 4 38
+played: R8a4
+note: [?? candidates2026.pgn] “Black is already in trouble, and now comes a blunder.
+
+fen: 3r1rk1/2qb2bp/1p2pnp1/p1p1p3/P1P1P2P/2N1QNP1/1P3PB1/R4RK1 b - - 0 19
+played: Kh8
+note: [?! candidates2026.pgn] Black probably underestimated White’s idea of Bh3.
+
+fen: 5r1k/1b1R2bp/1p2pqp1/pNp1N3/P1P4P/4Q1P1/1P3nB1/6K1 w - - 2 27
+played: Rxb7
+note: [?? candidates2026.pgn] And now White returns the favor and loses her winning chances!
+
+fen: 2rr2k1/1Q3ppp/8/8/2pb4/P6P/4RPP1/6K1 w - - 2 29
+played: a4
+note: [?! wc2004_kramnik_leko.pgn] Inaccuracy. Rd2 was best.
+
+fen: 2r3k1/5p1p/6p1/b7/P5P1/1Qp4P/2Rr1PK1/8 b - - 2 35
+played: Rcd8
+note: [?! wc2004_kramnik_leko.pgn] Inaccuracy. Bb4 was best.
+
+fen: 8/5pk1/5r1p/6pP/6P1/2Q5/5rK1/8 w - - 4 63
+played: Kg3
+note: [?! wc2004_kramnik_leko.pgn] Inaccuracy. Kg1 was best.
+
+fen: r2q1rk1/1b1p1ppp/p4n2/npp3N1/4Pp2/P1PP3P/B1P3P1/R1BQR1K1 w - - 0 16
+played: e5
+note: [?! wc2004_kramnik_leko.pgn] Inaccuracy. Bxf4 was best.
+
+fen: 2r1r1k1/ppp1bppp/2n5/3q1b2/3P1B2/P1P2N2/4BPPP/R2QR1K1 w - - 2 16
+played: c4
+note: [?! wc2004_kramnik_leko.pgn] Inaccuracy. Bf1 was best.
+
+fen: r2q1rk1/1bpnbppp/p2p4/1p2p3/3nP3/PBNP1N1P/1PP2PP1/R1BQR1K1 w - - 3 12
+played: Ba2
+note: [?! wc2004_kramnik_leko.pgn] Inaccuracy. Nxd4 was best.
+
+fen: 1R6/4bpk1/6p1/4P2p/r4P2/3KB2P/5P2/8 b - - 10 45
+played: Bh4
+note: [?! wc2004_kramnik_leko.pgn] Inaccuracy. Ra3+ was best.
+
+fen: 8/6k1/2R3p1/4Kp1p/5P2/5PbP/8/8 b - - 7 64
+played: h4
+note: [?! wc2004_kramnik_leko.pgn] Inaccuracy. Bh4 was best.
+
+fen: r1b1k2r/2p2ppp/p1n2n2/2bq4/Pp1p4/1BP2N2/1P3PPP/RNBQ1RK1 b kq - 1 11
+played: Qd8
+note: [?! wc2004_kramnik_leko.pgn] Inaccuracy. Qd6 was best.
+
+fen: r1bqk2r/2p1bppp/p1n2n2/8/Pp1N4/1BP5/1P3PPP/RNBQR1K1 b kq - 0 13
+played: Nxd4
+note: [?! wc2004_kramnik_leko.pgn] Inaccuracy. Na5 was best.
+
+fen: r3k2r/1bp1bppp/p4n2/6B1/Pp1P4/1B6/1P3PPP/RN2R1K1 b kq - 2 16
+played: h6
+note: [?! wc2004_kramnik_leko.pgn] Inaccuracy. Rd8 was best.
+
+fen: r3k2r/1bp1bp2/p4p1p/8/Pp1P4/1B6/1P1N1PPP/R3R1K1 b kq - 1 18
+played: Rg8
+note: [?! wc2004_kramnik_leko.pgn] Inaccuracy. Rd8 was best.
+
+fen: 4k3/1bprbp2/p4p1p/6r1/Pp1P4/1B2N1P1/1P3P1P/2R1R1K1 b - - 6 22
+played: Kf8
+note: [?! wc2004_kramnik_leko.pgn] Inaccuracy. Ra5 was best.
+
+fen: 1k4r1/p1b2p2/7p/1p1P3q/2p1Qp2/5N2/PP3P2/1K2R3 w - - 0 34
+played: Nd4
+note: [?! wc2004_kramnik_leko.pgn] Inaccuracy. Kc1 was best.
+
+fen: r1bq1rk1/pp3pbp/n2p1np1/2pP4/4P3/2N5/PP1NBPPP/R1BQ1RK1 b - - 4 10
+played: Ne8
+note: [?! wc2004_kramnik_leko.pgn] Inaccuracy. Re8 was best.
+
+fen: r1bqn1k1/ppn3bp/3p2p1/2pP1r2/P1N5/2N5/1P2BPPP/R1BQ1RK1 w - - 0 14
+played: Bg4
+note: [?! wc2004_kramnik_leko.pgn] Inaccuracy. Re1 was best.
+
+fen: 4nrk1/p2q1rbp/1p1p2p1/1PpP4/2N5/1QB2P2/1P4PP/R4RK1 b - - 0 21
+played: g5
+note: [?! wc2004_kramnik_leko.pgn] Inaccuracy. Re7 was best.
+
+fen: 4nrk1/p4qb1/1p1p4/1PpP2pp/5r2/2B1NP2/1PQ3PP/R3R1K1 w - - 2 25
+played: h3
+note: [?! wc2004_kramnik_leko.pgn] Inaccuracy. Nf1 was best.
+
+fen: 4R3/R7/1p1p1k2/1Ppr1rpp/8/5P1P/1P4P1/6K1 w - - 3 33
+played: g4
+note: [?! wc2004_kramnik_leko.pgn] Inaccuracy. Rh7 was best.
+
+fen: 7R/R7/1p1p1k2/1Pp1r1p1/6P1/5PK1/1P1r4/8 b - - 6 37
+played: Ree2
+note: [?! wc2004_kramnik_leko.pgn] Inaccuracy. Ke6 was best.
+
+fen: 7R/R7/1p1p1k2/1Pp3p1/6P1/5PK1/1P1rr3/8 w - - 7 38
+played: Rf8+
+note: [?! wc2004_kramnik_leko.pgn] Inaccuracy. Rh6+ was best.
+
+fen: 1R6/8/1P1p4/3k4/2p2pP1/1r6/1P3K2/8 b - - 0 49
+played: Ke4
+note: [?! wc2004_kramnik_leko.pgn] Inaccuracy. Rxb2+ was best.
+
+fen: r2kb2r/1p3pp1/p3p3/3pP1Nn/PP1P3P/3B4/3K1P2/2R3R1 w - - 3 24
+played: b5
+note: [?! wc2004_kramnik_leko.pgn] Inaccuracy. Ke3 was best.
+
+fen: r2q1rk1/5ppp/2np4/p2bp1b1/1pP1P3/3Q2P1/PPN2PBP/R4RK1 w - - 0 17
+played: cxd5
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Qxd5 was best.
+
+fen: r2q1rk1/1b3pp1/pn1bpn1p/3p4/3P3B/2NB1N2/PPQ2PPP/2R2RK1 b - - 3 15
+played: Qb8
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Bf4 was best.
+
+fen: rq3rk1/1b3pp1/pn1bpn1p/3p4/3P3B/2NB1N2/PPQ2PPP/2R2RK1 w - - 4 16
+played: Bg3
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Bxf6 was best.
+
+fen: r1r3k1/1b1n1pp1/p2qpn1p/3p4/3P4/2NB1NP1/PPR1QPP1/2R3K1 b - - 4 20
+played: Rab8
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Rc7 was best.
+
+fen: 1rr3k1/1b1n1pp1/p2qpn1p/3p4/N2P4/3B1NP1/PPR1QPP1/2R3K1 b - - 6 21
+played: Ne4
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Rxc2 was best.
+
+fen: 1rb3k1/3n1pp1/p2qp2p/3p4/N2Pn3/3B1NP1/PP2QPP1/2R3K1 w - - 0 23
+played: Qc2
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Qe1 was best.
+
+fen: 1rb3k1/R7/p3p2p/2N1Npp1/1n1Pp3/6P1/PP3PP1/6K1 b - - 7 31
+played: Nc2
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Nd5 was best.
+
+fen: 4r3/p2n1ppk/4pn1p/8/7B/5Q2/P4PPP/2rR2K1 b - - 1 23
+played: Rec8
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Ne5 was best.
+
+fen: 2r5/p2n1ppk/4pn1p/8/7B/5Q2/P4PPP/2rR2K1 w - - 2 24
+played: h3
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Qd3+ was best.
+
+fen: 8/p1r2p1k/P3pp1p/3n4/3Q4/7P/5PPK/8 b - - 2 33
+played: f5
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Rd7 was best.
+
+fen: 7Q/p2r1p2/P3pnkp/5p2/5P2/6KP/6P1/8 w - - 5 37
+played: Qb8
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Qa8 was best.
+
+fen: 1Q6/p2r1p2/P3pnk1/5p1p/5P1K/7P/6P1/8 b - - 9 42
+played: Re7
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Kh6 was best.
+
+fen: 1Q6/p3rp2/P3pnk1/5p1p/5P1K/7P/6P1/8 w - - 10 43
+played: g4
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Qb5 was best.
+
+fen: r3kb1r/p4ppp/b1p1p3/3qp3/2N4P/1P1P1Q2/P1P2PP1/R1B1K2R w KQkq - 3 13
+played: Qxd5
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Qg3 was best.
+
+fen: 2r1r1k1/pp1b1pp1/7p/3Pb3/P2pB3/1q4P1/1B1Q1P1P/R3R1K1 w - - 0 21
+played: Reb1
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Bxd4 was best.
+
+fen: 1k2r3/p4ppp/3r1n2/2R5/2N5/1PN4b/P1P1KP1P/R7 w - - 3 20
+played: Ne3
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Kf3 was best.
+
+fen: 1k2r3/p4ppp/3r4/2RN4/8/1P2n2b/P1P1KP1P/R7 w - - 0 22
+played: Nxe3
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. fxe3 was best.
+
+fen: 1k2r3/p4ppp/3r4/2R5/6b1/1P2N3/P1P1KP1P/R7 w - - 1 23
+played: f3
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Kf1 was best.
+
+fen: 2r2rk1/pp1nqpp1/2pbpnp1/3p4/2PP4/2NBP2P/PPQ2PP1/R1BR2K1 w - - 5 13
+played: c5
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Bd2 was best.
+
+fen: 1br1nrk1/pp1nq1p1/2p1p3/1PPp1p2/3P1p2/2NBP2P/P1Q3P1/1RBR2K1 w - - 0 18
+played: exf4
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. bxc6 was best.
+
+fen: 1R3rk1/p1r3q1/B1p3n1/2Pp4/3Pp3/7P/P4QP1/1R4K1 w - - 2 29
+played: Kh2
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Rxf8+ was best.
+
+fen: 5r2/p6k/2p1n3/2Pp4/3Pp1B1/6RP/P4rPK/3R4 b - - 6 35
+played: Nf4
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. R8f6 was best.
+
+fen: 2R5/p4r1k/2p5/2Pp4/3P1nB1/4p1RP/r5PK/8 w - - 0 39
+played: Rxe3
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Rxc6 was best.
+
+fen: 8/2R5/8/2P3k1/8/2r4P/7K/8 b - - 2 51
+played: Kf5
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Kh4 was best.
+
+fen: 2R5/8/2Pk4/8/7P/4r3/7K/8 b - - 6 56
+played: Ra3
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Rc3 was best.
+
+fen: r1bqkb1r/pp1npppp/3p1n2/1Bp1P3/3P4/5N2/PPP2PPP/RNBQK2R b KQkq - 0 5
+played: Qa5+
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. cxd4 was best.
+
+fen: r1b1kb1r/pp1npppp/3p4/qBp1P3/3Pn3/2N2N2/PPP2PPP/R1BQK2R w KQkq - 3 7
+played: Bd2
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Rb1 was best.
+
+fen: r3kb1r/pp1bpppp/q2p4/2p1P3/3P4/2B2N2/PPP2PPP/R2QK2R w KQkq - 1 10
+played: exd6
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Qd2 was best.
+
+fen: 8/7p/3p4/2pP1k2/1pP1b3/1P2R1B1/5P2/r1K5 w - - 1 47
+played: Kd2
+note: [?! wc2012_anand_gelfand.pgn] Inaccuracy. Kb2 was best.
+
+fen: rnbqkbnr/ppp2ppp/4p3/3p4/3PP3/2N5/PPP2PPP/R1BQKBNR b KQkq - 1 3
+played: Bb4
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Nf6 was best.
+
+fen: r2qk1r1/1bp2p1p/ppn1pn2/1B6/2PPpN2/P7/2PQ1PPP/R1B1K2R w KQq - 0 14
+played: Ba4
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Bxc6+ was best.
+
+fen: r2qk1r1/1bp2p1p/ppn1pn2/8/B1PPpN2/P7/2PQ1PPP/R1B1K2R b KQq - 1 14
+played: Nd7
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Qe7 was best.
+
+fen: r3k1r1/2pn1p1p/pp2p3/3Pn1q1/2P1pN2/P1Q5/2P2PPP/R1B1K2R w KQq - 1 20
+played: Bd2
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Qg3 was best.
+
+fen: 2kr2r1/2p2p2/p3p3/2pPnq1p/4p3/P1Q1B2P/2P2PP1/2KR3R w - - 0 27
+played: Qa5
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Qxc5 was best.
+
+fen: 6r1/2pk1p2/Q3p3/2prnq1p/4p3/P3B2P/2P2PP1/2KR3R w - - 1 29
+played: Qa4+
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Qb5+ was best.
+
+fen: 6r1/2p1kp2/4p3/2prnq1p/Q3p3/P3B2P/2P2PP1/2KR3R w - - 3 30
+played: Qa5
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Qa7 was best. 1/2-1/2 The game is a draw.
+
+fen: 3r4/1bk3p1/p1p1rp1p/PpR1P2P/1P1PB1P1/4K3/8/2R5 b - - 8 62
+played: Rde8
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. fxe5 was best.
+
+fen: 5r2/1bk3r1/p1p4p/PpR1P3/1P2B1P1/6K1/8/7R b - - 5 69
+played: Bc8
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Rfg8 was best.
+
+fen: r4rk1/5ppp/p1p5/5bq1/2B2b2/1P3Q2/PB3PPP/R4RK1 w - - 1 19
+played: Qxc6
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Rfe1 was best.
+
+fen: 2r2rk1/5ppp/p1Q5/5bq1/2B2b2/1P6/PB3PPP/R4RK1 w - - 1 20
+played: Qf3
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Qb7 was best.
+
+fen: r2q1rk1/1b2bpnp/p5pB/3pN3/2pP4/4PQ2/P4PPP/1BRR2K1 b - - 1 24
+played: Qc8
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Rc8 was best.
+
+fen: r4rk1/1b2b1np/p3qppB/3p4/2pPP1N1/5Q2/P4PPP/1BRR2K1 w - - 2 27
+played: exd5
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Re1 was best.
+
+fen: 2r3k1/r6p/p5pQ/b2q1p2/2pP3P/P7/B4PP1/2RR2K1 w - - 0 36
+played: Qe3
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Rc2 was best.
+
+fen: 2r3k1/2r4p/p5p1/b2q1p2/2pP3P/P3Q3/B1R2PP1/3R2K1 b - - 3 37
+played: Qe4
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Kg7 was best.
+
+fen: 4rr1k/1p3pp1/p1nb1q2/8/4B3/1NP2N1b/PPQ2PP1/R4RK1 b - - 2 19
+played: Qf4
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Bg4 was best.
+
+fen: 7k/1p6/p7/6p1/3P1b2/4rN2/PP3R2/7K w - - 0 35
+played: Kg2
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Ne5 was best.
+
+fen: 8/8/2k5/p7/6K1/2r5/8/1R6 w - - 0 62
+played: Kf4
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Rb8 was best.
+
+fen: 5k2/2q3p1/ppP2p2/8/1P3pP1/P3P2P/4r3/2Q3K1 w - - 0 40
+played: exf4
+note: [?? wwc1984_chiburdanidze_levitina.pgn] Checkmate is now unavoidable. Qd1 was best.
+
+fen: 5k2/2q3p1/ppP2p2/8/1P3PP1/P6P/4r3/2Q3K1 b - - 0 40
+played: Re6
+note: [?? wwc1984_chiburdanidze_levitina.pgn] Lost forced checkmate sequence. Qd6 was best. 0-1 Black wins.
+
+fen: r1bq1rk1/bp3pp1/p6p/2np1N2/3NnB2/8/PPP1BPPP/R2Q1RK1 w - - 6 15
+played: Be5
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Be3 was best.
+
+fen: r2r3k/bp4p1/p4p1p/3N4/2Pnn3/3B2B1/PP3PPP/R4RK1 b - - 2 22
+played: Nc5
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Nxg3 was best.
+
+fen: 2rr3k/b5p1/pn2NpBp/8/2P2P2/6P1/P5P1/R4R1K b - - 4 30
+played: Rd6
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Rd7 was best.
+
+fen: 7k/b5p1/p4p1p/5Pr1/2R5/3n2PB/P5P1/1R5K b - - 6 38
+played: Kh7
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Nf2+ was best.
+
+fen: 8/6p1/3b1p2/6kp/P1R5/5RPP/r7/4K3 b - - 10 54
+played: Rh2
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Be5 was best.
+
+fen: r7/P5p1/2R2p2/R3bk1p/7P/5KP1/8/8 w - - 1 80
+played: Rb6
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Rca6 was best.
+
+fen: r7/P5p1/1R3p2/R3bk1p/7P/5KP1/8/8 b - - 2 80
+played: g6
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Kg6 was best.
+
+fen: 5rk1/ppq1b3/2p1p3/2PrNppp/1Q1Pp3/4P1PP/PP4P1/2R2RK1 w - - 8 25
+played: Rc3
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Ng6 was best.
+
+fen: 1r4k1/ppq5/2p1pb2/2Pr1ppp/1QNPp3/2R1P1PP/PP4P1/5RK1 w - - 12 27
+played: Ra3
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Nd6 was best.
+
+fen: 1r4k1/2q5/Rpp1pb2/1r3ppp/1QNPp3/4P1PP/PP4P1/5RK1 w - - 2 30
+played: Qe1
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Qd6 was best.
+
+fen: 1r2r1k1/pb1n1ppp/1p6/6N1/3P4/8/PP3PPP/2R1KB1R w K - 1 17
+played: Kd1
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Kd2 was best.
+
+fen: 1r1r2k1/pb1n1ppp/1p6/6N1/3P4/8/PP3PPP/2RK1B1R w - - 3 18
+played: Nf3
+note: [?! wwc1984_chiburdanidze_levitina.pgn] Inaccuracy. Rc3 was best.
+
+fen: 5k2/1R3pp1/8/1p3r1p/3P1P2/4K1P1/7P/8 b - - 0 40
+played: Ke8
+note: [? wwc2025_annotated.pgn] This is the decisive mistake, but Black's position was already tough. In practice, this position should be very difficult to defend. Black needs to find only moves and that's something only engines excel at.
+
+fen: 8/2k2p2/6p1/2Pb3p/1R1B1K1P/6P1/r4P2/8 b - - 2 60
+played: Bc6
+note: [? wwc2025_annotated.pgn] Tan tries to use the Rook exchange idea one more time to defend against the entry of the white King, but this time she goes wrong.
+
+fen: r1bqk2r/bp1p1ppp/p3p1n1/2P1n3/4P3/1NN5/PP2BPPP/R1BQ1RK1 b kq - 2 11
+played: b5
+note: [? wwc2025_annotated.pgn] Gaining an outpost for her knight on c4, but this move looks rather strange. Black should try to undermine the c5 pawn as soon as possible.
+
+fen: Q7/6k1/p2q1n1p/1pp2pp1/8/1P2PNP1/P4PKP/8 w - - 0 31
+played: h4
+note: [? wwc2025_annotated.pgn] After defeding so well for the last moves, Tan crumbles under the pressure. It's certainly not easy to find moves here.
+
+fen: r1b2rk1/p1q2ppp/2pbp1n1/8/N3P3/3B4/PP3PPP/R1BQ1RK1 w - - 0 14
+played: Qh5
+note: [?! wwc2025_annotated.pgn] This is the game's first new move. With precise moves, Black could take the initiative. Black could have pursued two promising ideas.
+
+fen: 3r1bk1/p1q2ppp/b1p1p3/8/Nr2P3/1PQ5/PB3PP1/R2R3K w - - 4 23
+played: Nc5
+note: [?! wwc2025_annotated.pgn] Provides an opportunity for Black to take the initiative.
+
+fen: 3r1bk1/p3qppp/brp1p3/2N1Q3/4P3/1P6/PB3PP1/R2R3K w - - 8 25
+played: Rac1
+note: [? wwc2025_annotated.pgn] This is a very logical move; however, it allows Black to gain a significantly better position.
+
+fen: 2b3k1/4bp2/2p1p3/pr2P2p/3BNK2/1P6/P5P1/2R5 b - - 0 35
+played: Bb7
+note: [?? wwc2025_annotated.pgn] This is a wrong move. Black overlooks White's strong move to exchange the dark-squared bishops, after which the position is very hard to defend. The main problem for Black here is the weak light-squared bishop.
+
+fen: r1b2rk1/1ppn1pp1/p2pq2p/4p3/3PP2B/1PPQ1N2/2P2PPP/R3R1K1 w - - 0 15
+played: Rad1
+note: [?! wwc2025_annotated.pgn] It's a standard move, but it's inaccurate. More aggressive plans would be preferable.
+
+fen: r1b1r1k1/1ppn1pp1/p2pq2p/4p3/3PP3/1PPQ1NB1/2P2PPP/3RR1K1 b - - 3 16
+played: b5
+note: [?! wwc2025_annotated.pgn] It controls the c4 square, but at some point, White can play c3-c4, and the b5 pawn can be a hook pawn.
+
+fen: r1b1r1k1/2pn1pp1/p2pq2p/1p2p3/3PP3/1PPQ1NB1/2P2PPP/3RR1K1 w - - 0 17
+played: Nd2
+note: [?! wwc2025_annotated.pgn] Tan is starting to pursue a misguided plan.
+
+fen: 4r1k1/2pb2p1/p2p2qp/Np2rp2/1P2P3/2PQR1P1/2P2PP1/4R1K1 w - - 0 25
+played: Qd4
+note: [? wwc2025_annotated.pgn] It's a mistake. White is sacrificing the pawn in the wrong direction.
+
+fen: 6k1/2pb2p1/p2p2qp/Np6/1P1Qp3/2P3P1/2P2PP1/6K1 w - - 0 28
+played: c4
+note: [? wwc2025_annotated.pgn] Tan overlooked the strong response from Black.
+

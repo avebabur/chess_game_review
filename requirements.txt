@@ -1,0 +1,16 @@
+python-chess
+fastapi
+uvicorn
+python-dotenv
+pytest
+# Maia-2 human-move probabilities (optional — app degrades gracefully without)
+maia2
+torch
+numpy
+pandas
+tqdm
+requests
+einops
+pyzstd
+pyyaml
+gdown

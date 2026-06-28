@@ -1,0 +1,46 @@
+# Golden explanation set — see README.md for the format.
+# Seeded 2026-06-10 with the positions that exposed the template correctness
+# bugs (puzzles 519-523, game vs SubirSett). Add your own below.
+
+fen: 2r5/1p6/6k1/P2R4/2n3pK/5P2/8/8 w - - 0 45
+played: Rg5+
+best: fxg4
+mention: fxg4 | pawn
+avoid: more passive | fewer good squares
+note: The check achieves nothing; just take the pawn back with fxg4.
+
+fen: 2r5/1p6/5k2/P5R1/2n3pK/5P2/8/8 w - - 2 46
+played: fxg4
+best: Rxg4
+mention: Rxg4
+avoid: open e-file | the plan is to | takes the pawn
+note: Both moves capture g4, so "it takes the pawn" is NOT the contrast —
+  the difference is what each recapture allows. Never name a shared remedy
+  as the reason one move beats the other.
+
+fen: 2r5/1p6/4k3/P3nR2/6PK/8/8/8 w - - 3 48
+played: Kg5
+best: Rf1
+mention: wins a pawn
+avoid: open e-file
+note: Kg5 drops a pawn (Rxa5 or Rxg4 depending on depth). Rf1 keeps the rook active; do not invent an e-file story for a move to f1.
+
+fen: 6r1/1p6/4k3/P3nRK1/6P1/8/8/8 w - - 5 49
+played: Kf4
+best: Kh5
+mention: Rxg4
+avoid: toward the center
+note: Kf4 steps off the g-file so Rxg4+ wins the pawn. Kh5 is the edge, never "toward the center".
+
+fen: 2r5/1p6/5k2/P5R1/2n3PK/8/8/8 b - - 0 46
+played: Ne5
+best: Rh8+
+avoid: undefended king
+note: A checking rook move must not be described as "hits the undefended king".
+
+fen: 8/2b5/K1k5/8/8/8/8/1r6 b - - 63 89
+played: Kc5
+best: Ra1#
+mention: immediate checkmate
+avoid: small engine preference
+note: If the best move is mate in one, name the mate instead of downplaying it as a small engine preference.

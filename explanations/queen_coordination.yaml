@@ -1,0 +1,20 @@
+# Deterministic explanation templates for queen mutual-protection coordination.
+# Emitted only when detectors/queen_coordination.py confirms mutual defense.
+
+id: queen_mutual_protection_advantage
+category: queen_coordination_advantage
+
+templates:
+  connected_pair:
+    headline: "The queens support each other — one gives check while the other covers the retreat."
+    detail: "Mutual queen protection keeps the checking queen safe from king capture."
+    takeaway: "In queen-and-queen or queen-rook nets, connect the pieces so the checker cannot be taken."
+
+  protected_checker:
+    headline: "Your checking queen is defended — the king cannot capture it."
+    detail: "The second queen (or coordinated piece) defends the square the checker occupies."
+    takeaway: "Before repeating checks, verify the checking piece is defended."
+
+suppression:
+  disconnected: "Do not emit when queens are not mutually defending."
+  exposed_checker: "Do not emit when the checking queen is capturable."
