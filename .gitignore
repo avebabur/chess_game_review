@@ -32,8 +32,8 @@ dist-ssr/
 .idea/
 *.swp
 
-# --- Local Claude Code settings ---
-.claude/settings.local.json
+# --- Claude Code (local dev tooling, machine-specific paths) ---
+.claude/
 
 # --- Misc scratch ---
 explanation_test/
