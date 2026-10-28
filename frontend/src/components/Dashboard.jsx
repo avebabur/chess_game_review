@@ -5,6 +5,7 @@ import PlayerProfile from './PlayerProfile'
 import StudyPlan from './StudyPlan'
 import OpeningMistakes from './OpeningMistakes'
 import ImprovementChart from './ImprovementChart'
+import { PALETTE } from '../palette'
 
 export default function Dashboard() {
   const [stats, setStats] = useState(null)
@@ -123,7 +124,7 @@ export default function Dashboard() {
                   className="weakness-bar-fill"
                   style={{
                     width: `${w.accuracy}%`,
-                    backgroundColor: w.accuracy < 40 ? '#e74c3c' : w.accuracy < 70 ? '#f39c12' : '#27ae60',
+                    backgroundColor: w.accuracy < 40 ? PALETTE.red : w.accuracy < 70 ? PALETTE.gold : PALETTE.good,
                   }}
                 />
               </div>

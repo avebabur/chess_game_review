@@ -64,7 +64,16 @@ def analyze_game(pgn_text, progress_callback=None, player_context=None):
     game = chess.pgn.read_game(io.StringIO(pgn_text))
     if not game:
         raise ValueError("Could not parse PGN")
+    # One pool serves both phases; it used to be torn down after phase 1 and a
+    # second pool spawned for phase 2 (N extra engine start-ups per game).
+    pool = StockfishPool()
+    try:
+        return _analyze_game(game, pool, progress_callback, player_context)
+    finally:
+        pool.close()
 
+
+def _analyze_game(game, pool, progress_callback, player_context):
     board = game.board()
     moves = list(game.mainline_moves())
     clock_entries = extract_mainline_clocks(game)
@@ -114,7 +123,6 @@ def analyze_game(pgn_text, progress_callback=None, player_context=None):
     # 1b. Analyse positions IN PARALLEL via the pool. Terminal positions
     # (checkmate / stalemate after the last move) need no analysis —
     # eval is determined by the result.
-    pool = StockfishPool()
     pos_infos = [None] * len(boards_in_order)
     completed = {"count": 0}
     lock_progress = __import__("threading").Lock()
@@ -128,30 +136,27 @@ def analyze_game(pgn_text, progress_callback=None, player_context=None):
         info = pool.analyse(b, chess.engine.Limit(depth=pos_depths[idx]), multipv=1)
         return idx, info
 
-    try:
-        # As tasks complete, fire progress_callback. Progress is reported
-        # at the granularity of "positions completed out of N+1".
-        with ThreadPoolExecutor(max_workers=pool.n_workers) as ex:
-            futures = [ex.submit(_analyse_one, i) for i in range(len(boards_in_order))]
-            for fut in futures:
-                idx, info = fut.result()
-                pos_infos[idx] = info
-                with lock_progress:
-                    completed["count"] += 1
-                    if progress_callback:
-                        # Translate "positions completed" to the existing
-                        # "stockfish" stage's current/total schema. We
-                        # report fractional progress relative to the
-                        # number of MOVES so the UI bar stays calibrated.
-                        c = completed["count"]
-                        progress_callback(
-                            "stockfish",
-                            min(len(moves), c * len(moves) // len(boards_in_order)),
-                            len(moves),
-                            len(moves),
-                        )
-    finally:
-        pool.close()
+    # As tasks complete, fire progress_callback. Progress is reported
+    # at the granularity of "positions completed out of N+1".
+    with ThreadPoolExecutor(max_workers=pool.n_workers) as ex:
+        futures = [ex.submit(_analyse_one, i) for i in range(len(boards_in_order))]
+        for fut in futures:
+            idx, info = fut.result()
+            pos_infos[idx] = info
+            with lock_progress:
+                completed["count"] += 1
+                if progress_callback:
+                    # Translate "positions completed" to the existing
+                    # "stockfish" stage's current/total schema. We
+                    # report fractional progress relative to the
+                    # number of MOVES so the UI bar stays calibrated.
+                    c = completed["count"]
+                    progress_callback(
+                        "stockfish",
+                        min(len(moves), c * len(moves) // len(boards_in_order)),
+                        len(moves),
+                        len(moves),
+                    )
 
     # 1c. Build move_data sequentially from the parallel results. This
     # is pure Python — fast even for long games.
@@ -287,7 +292,7 @@ def analyze_game(pgn_text, progress_callback=None, player_context=None):
     enriched_highlights = []
     n_coach = len(all_moments)
     if n_coach > 0:
-        coach_pool = StockfishPool()
+        coach_pool = pool
 
         def _enrich_critical_task(cm):
             with coach_pool.checkout() as eng:
@@ -297,23 +302,20 @@ def analyze_game(pgn_text, progress_callback=None, player_context=None):
             with coach_pool.checkout() as eng:
                 return enrich_highlight_moment(hm, engine=eng, player_context=player_context)
 
-        try:
-            with ThreadPoolExecutor(max_workers=coach_pool.n_workers) as ex:
-                cm_futures = [ex.submit(_enrich_critical_task, cm) for cm in critical_moments]
-                hm_futures = [ex.submit(_enrich_highlight_task, hm) for hm in highlight_moments]
-                j = 0
-                for fut in cm_futures:
-                    enriched_moments.append(fut.result())
-                    j += 1
-                    if progress_callback:
-                        progress_callback("coaching", j, n_coach, len(moves))
-                for fut in hm_futures:
-                    enriched_highlights.append(fut.result())
-                    j += 1
-                    if progress_callback:
-                        progress_callback("coaching", j, n_coach, len(moves))
-        finally:
-            coach_pool.close()
+        with ThreadPoolExecutor(max_workers=coach_pool.n_workers) as ex:
+            cm_futures = [ex.submit(_enrich_critical_task, cm) for cm in critical_moments]
+            hm_futures = [ex.submit(_enrich_highlight_task, hm) for hm in highlight_moments]
+            j = 0
+            for fut in cm_futures:
+                enriched_moments.append(fut.result())
+                j += 1
+                if progress_callback:
+                    progress_callback("coaching", j, n_coach, len(moves))
+            for fut in hm_futures:
+                enriched_highlights.append(fut.result())
+                j += 1
+                if progress_callback:
+                    progress_callback("coaching", j, n_coach, len(moves))
 
     white_accuracy = calculate_accuracy([m for m in move_data if m["side"] == "White"])
     black_accuracy = calculate_accuracy([m for m in move_data if m["side"] == "Black"])

@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom'
+import { PALETTE } from '../palette'
 
 function PatternBar({ item, maxCount, variant = 'weakness' }) {
   const width = maxCount > 0 ? Math.round((item.count / maxCount) * 100) : 0
   const fillColor = variant === 'strength'
-    ? '#27ae60'
+    ? PALETTE.good
     : variant === 'theme'
-      ? '#f39c12'
-      : '#e74c3c'
+      ? PALETTE.gold
+      : PALETTE.red
 
   return (
     <div className="player-pattern-bar-row">

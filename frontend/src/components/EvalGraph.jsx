@@ -1,14 +1,7 @@
 import { useRef, useState, useEffect, useMemo, useCallback, memo } from 'react'
 import MoveNotation from './MoveNotation'
 import { formatEval, CLS_SYMBOLS } from '../reviewUtils'
-
-const CLS_COLORS = {
-  blunder: '#e74c3c',
-  mistake: '#e67e22',
-  inaccuracy: '#f1c40f',
-  great: '#2ecc71',
-  best: '#27ae60',
-}
+import { CLASS_COLORS as CLS_COLORS, PALETTE, alpha } from '../palette'
 
 const clamp = (v) => Math.max(-5, Math.min(5, (Math.abs(v) >= 100) ? (v > 0 ? 5 : -5) : v))
 
@@ -148,37 +141,37 @@ export default memo(function EvalGraph({ moves, currentMove, onClickMove, keyMom
         onMouseMove={handleHover}
         onMouseLeave={() => setHoverIdx(null)}
       >
-        <rect x={padding.left} y={padding.top} width={graphW} height={graphH} fill="#3a3531" rx="3" />
+        <rect x={padding.left} y={padding.top} width={graphW} height={graphH} fill={PALETTE.feltDeep} rx="2" />
 
         {driftBands.map((b, i) => (
-          <rect key={`drift-${i}`} x={b.x0} y={padding.top} width={b.w} height={graphH} fill="rgba(201,168,108,0.14)" />
+          <rect key={`drift-${i}`} x={b.x0} y={padding.top} width={b.w} height={graphH} fill={alpha(PALETTE.gold, 0.14)} />
         ))}
 
-        <path d={whitePath} fill="rgba(238,238,238,0.15)" />
-        <path d={blackPath} fill="rgba(51,51,51,0.3)" />
+        <path d={whitePath} fill={alpha(PALETTE.cream, 0.22)} />
+        <path d={blackPath} fill={alpha(PALETTE.felt, 0.6)} />
 
-        <line x1={padding.left} y1={midY} x2={width - padding.right} y2={midY} stroke="#444" strokeWidth="1" strokeDasharray="3,3" />
+        <line x1={padding.left} y1={midY} x2={width - padding.right} y2={midY} stroke={PALETTE.line} strokeWidth="1" strokeDasharray="3,3" />
 
-        <path d={linePath} fill="none" stroke="#aaa" strokeWidth="1.5" />
+        <path d={linePath} fill="none" stroke={PALETTE.muted} strokeWidth="1.25" />
 
         {hoverIdx != null && (
-          <line x1={hoverX} y1={padding.top} x2={hoverX} y2={height - padding.bottom} stroke="rgba(255,255,255,0.22)" strokeWidth="1" />
+          <line x1={hoverX} y1={padding.top} x2={hoverX} y2={height - padding.bottom} stroke={alpha(PALETTE.cream, 0.25)} strokeWidth="1" />
         )}
 
         {criticalDots.map((dot, i) => (
-          <circle key={i} cx={dot.x} cy={dot.y} r="3.5" fill={dot.color} stroke="#3a3531" strokeWidth="1" />
+          <circle key={i} cx={dot.x} cy={dot.y} r="3.5" fill={dot.color} stroke={PALETTE.feltDeep} strokeWidth="1" />
         ))}
 
         {keyRings.map((k, i) => (
-          <circle key={`key-${i}`} cx={k.x} cy={k.y} r="6" fill="none" stroke="#e8c879" strokeWidth="2" />
+          <circle key={`key-${i}`} cx={k.x} cy={k.y} r="6" fill="none" stroke={PALETTE.gold} strokeWidth="1.5" />
         ))}
 
-        <circle cx={activeX} cy={activeY} r="4.5" fill="#c9a86c" stroke="#fff" strokeWidth="1.5" />
-        <line x1={activeX} y1={padding.top} x2={activeX} y2={height - padding.bottom} stroke="rgba(79,195,247,0.3)" strokeWidth="1" />
+        <circle cx={activeX} cy={activeY} r="4.5" fill={PALETTE.gold} stroke={PALETTE.cream} strokeWidth="1.5" />
+        <line x1={activeX} y1={padding.top} x2={activeX} y2={height - padding.bottom} stroke={alpha(PALETTE.gold, 0.45)} strokeWidth="1" />
 
-        <text x={padding.left - 3} y={padding.top + 7} textAnchor="end" fill="#9c9488" fontSize="10">+5</text>
-        <text x={padding.left - 3} y={midY + 3} textAnchor="end" fill="#9c9488" fontSize="10">0</text>
-        <text x={padding.left - 3} y={height - padding.bottom} textAnchor="end" fill="#9c9488" fontSize="10">-5</text>
+        <text x={padding.left - 3} y={padding.top + 7} textAnchor="end" fill={PALETTE.faint} fontSize="10" fontFamily="IBM Plex Mono, monospace">+5</text>
+        <text x={padding.left - 3} y={midY + 3} textAnchor="end" fill={PALETTE.faint} fontSize="10" fontFamily="IBM Plex Mono, monospace">0</text>
+        <text x={padding.left - 3} y={height - padding.bottom} textAnchor="end" fill={PALETTE.faint} fontSize="10" fontFamily="IBM Plex Mono, monospace">-5</text>
       </svg>
 
       {hoverMove && (

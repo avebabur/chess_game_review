@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { Chess } from 'chess.js'
 import { api } from '../../api'
@@ -48,7 +48,8 @@ export default function Home() {
 
   useEffect(() => { loadProfile(); loadRecent() }, [])
 
-  const pgnValid = validatePgn(pgn)
+  // Parsing a PGN replays every move; don't redo it on each import-progress poll.
+  const pgnValid = useMemo(() => validatePgn(pgn), [pgn])
 
   const handleImport = async () => {
     const u = username.trim()
@@ -119,7 +120,7 @@ export default function Home() {
     <div className="cr2 home">
       <header className="home-hero">
         <h1>Your chess, <span>reviewed.</span></h1>
-        <p>Pull your whole chess.com history, explore your real opening tree, and learn why your moves go wrong.</p>
+        <p>Pull your whole chess.com history, review it with Stockfish, and learn why your moves go wrong.</p>
       </header>
 
       <section className="card import-card">
@@ -151,7 +152,7 @@ export default function Home() {
         )}
         {imp.state === 'done' && (
           <div className="import-done">
-            ✓ Imported <b>{impData?.imported ?? 0}</b> new games.{' '}
+            Imported <b>{impData?.imported ?? 0}</b> new games.{' '}
             <Link to="/games" className="link">Browse your games →</Link>
           </div>
         )}

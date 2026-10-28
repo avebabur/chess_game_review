@@ -13,6 +13,9 @@ function povResult(g) {
   if (g.result === '0-1') return g.user_color === 'white' ? 'loss' : g.user_color === 'black' ? 'win' : 'unknown'
   return 'unknown'
 }
+// Imported histories run to hundreds of games; render them a page at a time.
+const PAGE = 60
+
 const RES_LABEL = { win: 'Win', loss: 'Loss', draw: 'Draw', unknown: g => g.result }
 
 export default function GamesPage() {
@@ -25,6 +28,8 @@ export default function GamesPage() {
   const [time, setTime] = useState('all')
   const [q, setQ] = useState('')
   const [analyzingId, setAnalyzingId] = useState(null)
+  const [analyzeError, setAnalyzeError] = useState(null)
+  const [page, setPage] = useState({ key: '', n: PAGE })
   const poll = useRef(null)
 
   useEffect(() => () => clearInterval(poll.current), [])
@@ -48,20 +53,31 @@ export default function GamesPage() {
     })
   }, [games, color, result, time, q])
 
+  // Changing any filter starts again from the first page.
+  const filterKey = `${color}|${result}|${time}|${q}`
+  const visible = page.key === filterKey ? page.n : PAGE
+
+  const fail = (msg) => {
+    clearInterval(poll.current)
+    setAnalyzingId(null)
+    setAnalyzeError(msg)
+  }
+
   const openGame = (g) => {
     if (g.analyzed) { navigate(`/review/${g.id}`); return }
     if (analyzingId) return
     setAnalyzingId(g.id)
+    setAnalyzeError(null)
     api.post(`/games/${g.id}/analyze`).then(res => {
       const sid = res.data.status_id
       poll.current = setInterval(async () => {
         try {
           const d = (await api.get(`/analyze/status/${sid}`)).data
           if (d.status === 'complete') { clearInterval(poll.current); navigate(`/review/${g.id}`) }
-          else if (d.status === 'error' || d.status === 'interrupted') { clearInterval(poll.current); setAnalyzingId(null) }
-        } catch { clearInterval(poll.current); setAnalyzingId(null) }
+          else if (d.status === 'error' || d.status === 'interrupted') fail(d.error || 'Analysis failed')
+        } catch { fail('Lost connection to the server') }
       }, 1100)
-    }).catch(() => setAnalyzingId(null))
+    }).catch(e => fail(e.response?.data?.detail || 'Could not start the analysis'))
   }
 
   const counts = useMemo(() => ({
@@ -83,6 +99,8 @@ export default function GamesPage() {
         <input className="games-search" value={q} onChange={e => setQ(e.target.value)} placeholder="Search openings…" />
       </div>
 
+      {analyzeError && <div className="games-error" role="alert">{analyzeError}</div>}
+
       {loading ? (
         <div className="games-skel">{Array.from({ length: 8 }).map((_, i) => <div key={i} className="gskel" />)}</div>
       ) : error ? (
@@ -91,7 +109,7 @@ export default function GamesPage() {
         <div className="games-empty">No games match these filters.</div>
       ) : (
         <div className="games-list">
-          {filtered.map(g => {
+          {filtered.slice(0, visible).map(g => {
             const pov = povResult(g)
             const analyzing = analyzingId === g.id
             return (
@@ -115,6 +133,11 @@ export default function GamesPage() {
               </button>
             )
           })}
+          {filtered.length > visible && (
+            <button className="games-more" onClick={() => setPage({ key: filterKey, n: visible + PAGE })}>
+              Show {Math.min(PAGE, filtered.length - visible)} more
+            </button>
+          )}
         </div>
       )}
     </div>

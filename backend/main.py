@@ -2,6 +2,8 @@ import asyncio
 import io
 import os
 import sys
+import threading
+import atexit
 from itertools import count
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -14,6 +16,9 @@ from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.concurrency import run_in_threadpool
 from pydantic import BaseModel
+import chess
+import chess.engine
+import chess.pgn
 import database as db
 import analyzer
 import moment_refresh
@@ -41,6 +46,13 @@ def _next_import_id():
     return next(_import_id_counter)
 
 
+# Job state lives in memory; SQLite only gets the start and the terminal
+# state. Progress ticks (one per analysed position) used to be a DB write each,
+# and they're useless after a restart anyway — a running job is reported as
+# interrupted then.
+_TERMINAL = ("complete", "error")
+
+
 def _persist_analysis(status_id):
     if status_id not in analysis_status:
         return
@@ -54,7 +66,8 @@ def _init_analysis(status_id, payload):
 
 def _patch_analysis(status_id, patch):
     analysis_status[status_id].update(patch)
-    _persist_analysis(status_id)
+    if patch.get("status") in _TERMINAL:
+        _persist_analysis(status_id)
 
 
 def _persist_reanalyze(status_id, scope=None, game_id=None, analysis_marker=None):
@@ -76,7 +89,41 @@ def _init_reanalyze(status_id, payload, scope=None, game_id=None, analysis_marke
 
 def _patch_reanalyze(status_id, patch, scope=None, game_id=None, analysis_marker=None):
     reanalyze_status[status_id].update(patch)
-    _persist_reanalyze(status_id, scope=scope, game_id=game_id, analysis_marker=analysis_marker)
+    if patch.get("status") in _TERMINAL:
+        _persist_reanalyze(status_id, scope=scope, game_id=game_id, analysis_marker=analysis_marker)
+
+
+# One full-game analysis at a time. Each one starts a pool of Stockfish
+# workers sized to the machine; two concurrent jobs just thrash the CPU and
+# both finish later than they would back to back.
+_ANALYSIS_SLOT = threading.Semaphore(1)
+
+_ANALYSIS_KEYS = (
+    ("headers", {}), ("moves", []), ("critical_moments", []), ("highlight_moments", []),
+    ("drift_spans", []), ("plan_threads", []), ("concept_threads", []), ("opening", ""),
+    ("eco", ""), ("white_accuracy", None), ("black_accuracy", None), ("game_patterns", []),
+    ("has_clock_data", False), ("time_control_seconds", None),
+)
+
+
+def _analyze_and_store(pgn, on_progress, game_id=None):
+    """Run the full pipeline on `pgn` and persist it (new game when game_id is
+    None). Returns the game id. Every analyze/re-analyze endpoint goes through
+    here so they can't drift apart."""
+    if not _ANALYSIS_SLOT.acquire(blocking=False):
+        on_progress("queued", 0, 0)
+        _ANALYSIS_SLOT.acquire()
+    try:
+        # The pipeline only reads concept review hints; building the whole
+        # dashboard for it walked every stored game.
+        player_context = {"concept_review_hints": db.get_concept_review_hints()}
+        result = analyzer.analyze_game(
+            pgn, progress_callback=on_progress, player_context=player_context,
+        )
+    finally:
+        _ANALYSIS_SLOT.release()
+    full_analysis = {key: result.get(key, default) for key, default in _ANALYSIS_KEYS}
+    return db.store_analysis(pgn, full_analysis, game_id=game_id)
 
 def _validate_pgn(pgn: str):
     """Fast server-side PGN check before starting a background job."""
@@ -102,11 +149,6 @@ def _cleanup_old_statuses():
             for k in completed[:len(completed) - 10]:
                 del status_map[k]
 
-
-import chess
-import chess.engine
-import threading
-import atexit
 
 class PGNInput(BaseModel):
     pgn: str
@@ -431,6 +473,7 @@ async def lifespan(app):
     _init_status_id_counters()
     yield
     _shutdown_engine()
+    _shutdown_explore_engine()
 
 
 app = FastAPI(title="Chess Game Review", lifespan=lifespan)
@@ -449,7 +492,7 @@ app.add_middleware(
 
 
 @api.post("/analyze")
-async def analyze_game(input: PGNInput, background_tasks: BackgroundTasks):
+def analyze_game(input: PGNInput, background_tasks: BackgroundTasks):
     _validate_pgn(input.pgn)
     status_id = _next_analysis_id()
     _init_analysis(status_id, {
@@ -471,32 +514,7 @@ async def analyze_game(input: PGNInput, background_tasks: BackgroundTasks):
                     "move_count": move_count,
                 })
 
-            player_context = db.get_dashboard_stats()
-            result = analyzer.analyze_game(
-                pgn, progress_callback=on_progress, player_context=player_context,
-            )
-
-            full_analysis = {
-                "headers": result["headers"],
-                "moves": result["moves"],
-                "critical_moments": result["critical_moments"],
-                "highlight_moments": result.get("highlight_moments", []),
-                "drift_spans": result.get("drift_spans", []),
-                "plan_threads": result.get("plan_threads", []),
-                "concept_threads": result.get("concept_threads", []),
-                "opening": result.get("opening", ""),
-                "eco": result.get("eco", ""),
-                "white_accuracy": result.get("white_accuracy"),
-                "black_accuracy": result.get("black_accuracy"),
-                "game_patterns": result.get("game_patterns", []),
-                "has_clock_data": result.get("has_clock_data", False),
-                "time_control_seconds": result.get("time_control_seconds"),
-            }
-
-            game_id = db.save_game(pgn, full_analysis)
-            db.save_puzzles(game_id, result["critical_moments"])
-            db.sync_concepts_from_moments(result["critical_moments"])
-
+            game_id = _analyze_and_store(pgn, on_progress)
             _patch_analysis(sid, {"status": "complete", "game_id": game_id})
         except Exception as e:
             _patch_analysis(sid, {"status": "error", "error": str(e)})
@@ -507,7 +525,7 @@ async def analyze_game(input: PGNInput, background_tasks: BackgroundTasks):
 
 
 @api.get("/analyze/status/{status_id}")
-async def get_analysis_status(status_id: int):
+def get_analysis_status(status_id: int):
     if status_id in analysis_status:
         return analysis_status[status_id]
     row = db.get_analysis_job(status_id)
@@ -523,7 +541,7 @@ async def get_analysis_status(status_id: int):
 
 
 @api.post("/games/{game_id}/analyze")
-async def analyze_existing_game(game_id: int, background_tasks: BackgroundTasks):
+def analyze_existing_game(game_id: int, background_tasks: BackgroundTasks):
     """Deep-analyze an already-stored game (e.g. a chess.com import) in place."""
     game = db.get_game(game_id)
     if not game:
@@ -542,30 +560,7 @@ async def analyze_existing_game(game_id: int, background_tasks: BackgroundTasks)
                     "total": total, "move_count": move_count,
                 })
 
-            player_context = db.get_dashboard_stats()
-            result = analyzer.analyze_game(
-                pgn, progress_callback=on_progress, player_context=player_context,
-            )
-            full_analysis = {
-                "headers": result["headers"],
-                "moves": result["moves"],
-                "critical_moments": result["critical_moments"],
-                "highlight_moments": result.get("highlight_moments", []),
-                "drift_spans": result.get("drift_spans", []),
-                "plan_threads": result.get("plan_threads", []),
-                "concept_threads": result.get("concept_threads", []),
-                "opening": result.get("opening", ""),
-                "eco": result.get("eco", ""),
-                "white_accuracy": result.get("white_accuracy"),
-                "black_accuracy": result.get("black_accuracy"),
-                "game_patterns": result.get("game_patterns", []),
-                "has_clock_data": result.get("has_clock_data", False),
-                "time_control_seconds": result.get("time_control_seconds"),
-            }
-            db.update_game_analysis(gid, pgn, full_analysis)
-            db.delete_puzzles_for_game(gid)
-            db.save_puzzles(gid, result["critical_moments"])
-            db.sync_concepts_from_moments(result["critical_moments"])
+            _analyze_and_store(pgn, on_progress, game_id=gid)
             _patch_analysis(sid, {"status": "complete", "game_id": gid})
         except Exception as e:
             _patch_analysis(sid, {"status": "error", "error": str(e)})
@@ -576,29 +571,29 @@ async def analyze_existing_game(game_id: int, background_tasks: BackgroundTasks)
 
 
 @api.get("/games")
-async def list_games():
+def list_games():
     return db.get_all_games()
 
 
 @api.get("/games/recent")
-async def recent_games(limit: int = 5):
+def recent_games(limit: int = 5):
     return db.get_recent_games(limit)
 
 
 @api.get("/games/grid")
-async def games_grid():
+def games_grid():
     return db.get_games_grid()
 
 
 @api.delete("/games/{game_id}")
-async def delete_game(game_id: int):
+def delete_game(game_id: int):
     if not db.delete_game(game_id):
         raise HTTPException(404, "Game not found")
     return {"success": True}
 
 
 @api.get("/review/{game_id}")
-async def get_review(game_id: int):
+def get_review(game_id: int):
     game = db.get_game(game_id)
     if not game:
         raise HTTPException(404, "Game not found")
@@ -606,50 +601,46 @@ async def get_review(game_id: int):
 
 
 @api.get("/puzzles")
-async def get_puzzles(limit: int = 10, theme: str = None):
+def get_puzzles(limit: int = 10, theme: str = None):
     return db.get_due_puzzles(limit, theme=theme)
 
 
 @api.get("/weakness-summary")
-async def weakness_summary():
-    stats = db.get_dashboard_stats()
-    recent = stats.get("recent_misses", [])[:3]
-    weakness = stats.get("weakness_profile", [])[:3]
-    return {"recent_misses": recent, "top_weaknesses": weakness}
+def weakness_summary():
+    return {
+        "recent_misses": db.aggregate_recent_misses()[:3],
+        "top_weaknesses": db.puzzle_weakness_profile()[:3],
+    }
 
 
 @api.get("/player-patterns")
-async def player_patterns():
+def player_patterns():
     return db.aggregate_player_patterns()
 
 
 @api.get("/opening-mistakes")
-async def opening_mistakes(opening: str = None):
+def opening_mistakes(opening: str = None):
     return db.aggregate_opening_mistakes(opening_filter=opening)
 
 
 @api.get("/study/recommendations")
-async def study_recommendations(limit: int = 5):
+def study_recommendations(limit: int = 5):
     return db.get_study_recommendations(puzzle_limit=limit)
 
 
 @api.get("/improvement/timeline")
-async def improvement_timeline(weeks: int = 12):
+def improvement_timeline(weeks: int = 12):
     return db.get_improvement_timeline(weeks=weeks)
 
 
 @api.get("/concepts/due")
-async def due_concepts(limit: int = 5):
+def due_concepts(limit: int = 5):
     return db.get_due_concepts(limit=limit)
 
 
 @api.post("/concepts/{concept_key}/review")
-async def review_concept(concept_key: str, input: AttemptInput):
-    conn = db.get_db()
-    row = conn.execute(
-        "SELECT * FROM concept_reviews WHERE concept_key = ?", (concept_key,),
-    ).fetchone()
-    conn.close()
+def review_concept(concept_key: str, input: AttemptInput):
+    row = db.get_concept(concept_key)
     if not row:
         raise HTTPException(404, "Concept not found")
     db.record_concept_attempt(concept_key, row["label"], row["kind"], input.solved)
@@ -657,7 +648,7 @@ async def review_concept(concept_key: str, input: AttemptInput):
 
 
 @api.post("/puzzles/{puzzle_id}/attempt")
-async def record_puzzle_attempt(puzzle_id: int, input: AttemptInput):
+def record_puzzle_attempt(puzzle_id: int, input: AttemptInput):
     success = db.record_attempt(puzzle_id, input.solved)
     if not success:
         raise HTTPException(404, "Puzzle not found")
@@ -710,7 +701,7 @@ async def evaluate_stream(fen: str):
 
 
 @api.get("/dashboard")
-async def get_dashboard():
+def get_dashboard():
     return db.get_dashboard_stats()
 
 
@@ -720,7 +711,7 @@ DEFAULT_CHESSCOM_USER = "usernamechangeisstupid"
 
 
 @api.get("/profile")
-async def get_profile():
+def get_profile():
     return {
         "chesscom_username": db.get_setting("chesscom_username", DEFAULT_CHESSCOM_USER),
         "lichess_username": db.get_setting("lichess_username", ""),
@@ -729,7 +720,7 @@ async def get_profile():
 
 
 @api.post("/profile")
-async def save_profile(input: ProfileInput):
+def save_profile(input: ProfileInput):
     if input.chesscom_username is not None:
         db.set_setting("chesscom_username", input.chesscom_username.strip())
     if input.lichess_username is not None:
@@ -738,7 +729,7 @@ async def save_profile(input: ProfileInput):
 
 
 @api.post("/import/chesscom")
-async def import_chesscom(input: ImportInput, background_tasks: BackgroundTasks):
+def import_chesscom(input: ImportInput, background_tasks: BackgroundTasks):
     import chesscom_import
 
     username = (input.username
@@ -775,7 +766,7 @@ async def import_chesscom(input: ImportInput, background_tasks: BackgroundTasks)
 
 
 @api.get("/import/chesscom/status/{status_id}")
-async def import_chesscom_status(status_id: int):
+def import_chesscom_status(status_id: int):
     if status_id in import_status:
         return import_status[status_id]
     raise HTTPException(404, "Unknown import status ID")
@@ -803,7 +794,7 @@ async def reanalyze_single_moment(game_id: int, body: ReanalyzeMomentInput):
 
 
 @api.post("/games/{game_id}/reanalyze")
-async def reanalyze_one_game(game_id: int, background_tasks: BackgroundTasks):
+def reanalyze_one_game(game_id: int, background_tasks: BackgroundTasks):
     game = db.get_game(game_id)
     if not game or not game.get("pgn"):
         raise HTTPException(404, "Game not found")
@@ -848,33 +839,7 @@ async def reanalyze_one_game(game_id: int, background_tasks: BackgroundTasks):
                     analysis_marker=analysis_marker,
                 )
 
-            _patch_reanalyze(
-                sid, {"progress": 0}, scope="one", game_id=gid, analysis_marker=analysis_marker,
-            )
-            player_context = db.get_dashboard_stats()
-            result = analyzer.analyze_game(
-                pgn, progress_callback=on_progress, player_context=player_context,
-            )
-            full_analysis = {
-                "headers": result["headers"],
-                "moves": result["moves"],
-                "critical_moments": result["critical_moments"],
-                "highlight_moments": result.get("highlight_moments", []),
-                "drift_spans": result.get("drift_spans", []),
-                "plan_threads": result.get("plan_threads", []),
-                "concept_threads": result.get("concept_threads", []),
-                "opening": result.get("opening", ""),
-                "eco": result.get("eco", ""),
-                "white_accuracy": result.get("white_accuracy"),
-                "black_accuracy": result.get("black_accuracy"),
-                "game_patterns": result.get("game_patterns", []),
-                "has_clock_data": result.get("has_clock_data", False),
-                "time_control_seconds": result.get("time_control_seconds"),
-            }
-            db.update_game_analysis(gid, pgn, full_analysis)
-            db.delete_puzzles_for_game(gid)
-            db.save_puzzles(gid, result["critical_moments"])
-            db.sync_concepts_from_moments(result["critical_moments"])
+            _analyze_and_store(pgn, on_progress, game_id=gid)
             _patch_reanalyze(
                 sid,
                 {"progress": 1, "status": "complete"},
@@ -902,7 +867,7 @@ async def reanalyze_one_game(game_id: int, background_tasks: BackgroundTasks):
 
 
 @api.post("/games/reanalyze-all")
-async def reanalyze_all_games(background_tasks: BackgroundTasks):
+def reanalyze_all_games(background_tasks: BackgroundTasks):
     games = db.get_all_games_with_pgn()
     if not games:
         return {"status_id": None, "message": "No games to re-analyze", "total": 0}
@@ -960,31 +925,7 @@ async def reanalyze_all_games(background_tasks: BackgroundTasks):
                             scope="all",
                         )
 
-                    player_context = db.get_dashboard_stats()
-                    result = analyzer.analyze_game(
-                        game["pgn"], progress_callback=on_progress,
-                        player_context=player_context,
-                    )
-                    full_analysis = {
-                        "headers": result["headers"],
-                        "moves": result["moves"],
-                        "critical_moments": result["critical_moments"],
-                        "highlight_moments": result.get("highlight_moments", []),
-                        "drift_spans": result.get("drift_spans", []),
-                        "plan_threads": result.get("plan_threads", []),
-                        "concept_threads": result.get("concept_threads", []),
-                        "opening": result.get("opening", ""),
-                        "eco": result.get("eco", ""),
-                        "white_accuracy": result.get("white_accuracy"),
-                        "black_accuracy": result.get("black_accuracy"),
-                        "game_patterns": result.get("game_patterns", []),
-                        "has_clock_data": result.get("has_clock_data", False),
-                        "time_control_seconds": result.get("time_control_seconds"),
-                    }
-                    db.update_game_analysis(game["id"], game["pgn"], full_analysis)
-                    db.delete_puzzles_for_game(game["id"])
-                    db.save_puzzles(game["id"], result["critical_moments"])
-                    db.sync_concepts_from_moments(result["critical_moments"])
+                    _analyze_and_store(game["pgn"], on_progress, game_id=game["id"])
                 except Exception as e:
                     errs = list(reanalyze_status[sid].get("errors", []))
                     errs.append({"game_id": game["id"], "error": str(e)})
@@ -1012,19 +953,29 @@ async def reanalyze_all_games(background_tasks: BackgroundTasks):
 
 
 @api.get("/games/reanalyze-all/status/{status_id}")
-async def get_reanalyze_status(status_id: int):
+def get_reanalyze_status(status_id: int):
     if status_id in reanalyze_status:
         return reanalyze_status[status_id]
     row = db.get_reanalyze_job(status_id)
-    if row:
-        return json.loads(row["payload"])
-    raise HTTPException(404, "Unknown status ID")
+    if not row:
+        raise HTTPException(404, "Unknown status ID")
+    payload = json.loads(row["payload"])
+    # Not in memory but persisted as running → the server restarted mid-job.
+    # Without this the reanalyze banner polled "analyzing" forever.
+    if payload.get("status") == "analyzing":
+        return {
+            **payload,
+            "status": "error",
+            "error": "Re-analysis interrupted (server restarted). Please start it again.",
+        }
+    return payload
 
 
 app.include_router(api)
 
 # --- Desktop mode: serve built React app from one port (no Terminal, no Vite) ---
 DIST_DIR = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "frontend", "dist"))
+DIST_REAL = os.path.realpath(DIST_DIR)
 
 
 @app.get("/health")
@@ -1067,8 +1018,9 @@ def _setup_desktop_frontend():
     async def serve_spa(full_path: str):
         if full_path.startswith("api/"):
             raise HTTPException(404)
-        target = os.path.join(DIST_DIR, full_path)
-        if full_path and os.path.isfile(target):
+        target = os.path.realpath(os.path.join(DIST_DIR, full_path))
+        # realpath + prefix check: "/..%2f..%2fetc/passwd" must not escape dist/.
+        if full_path and target.startswith(DIST_REAL + os.sep) and os.path.isfile(target):
             return FileResponse(target)
         index = os.path.join(DIST_DIR, "index.html")
         if os.path.isfile(index):

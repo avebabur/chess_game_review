@@ -7,6 +7,7 @@
  */
 
 import { Chess } from 'chess.js'
+import { CLASS_COLORS, PALETTE, alpha } from './palette'
 
 /**
  * Key-moment ranking — the few moves that actually decided the game. Shared by
@@ -69,13 +70,13 @@ export function formatEval(v) {
  * 'good' has no visual badge by design — only deviations are surfaced.
  */
 export const CLS_SYMBOLS = {
-  blunder: { text: '??', color: '#e74c3c' },
-  mistake: { text: '?', color: '#e67e22' },
-  inaccuracy: { text: '?!', color: '#f1c40f' },
-  great: { text: '!', color: '#2ecc71' },
-  best: { text: '★', color: '#27ae60' },
-  excellent: { text: '◆', color: '#2ecc71' },
-  book: { text: '📖', color: '#6c5ce7' },
+  blunder: { text: '??', color: CLASS_COLORS.blunder },
+  mistake: { text: '?', color: CLASS_COLORS.mistake },
+  inaccuracy: { text: '?!', color: CLASS_COLORS.inaccuracy },
+  great: { text: '!', color: CLASS_COLORS.great },
+  best: { text: '★', color: CLASS_COLORS.best },
+  excellent: { text: '◆', color: CLASS_COLORS.excellent },
+  book: { text: '≡', color: CLASS_COLORS.book },
 }
 
 /** SAN move on a given FEN -> `{from, to}` squares, or null if illegal. */
@@ -90,7 +91,7 @@ export function parseMoveFromFen(fen, moveSan) {
 
 export function classificationLabel(cls) {
   const labels = {
-    book: '📖 Book',
+    book: 'Book',
     best: '★ Best',
     excellent: 'Excellent',
     great: '! Great',
@@ -104,11 +105,12 @@ export function classificationLabel(cls) {
 
 /** Arrow color ramp for engine principal-variation overlays. */
 export const PV_ARROW_COLORS = [
-  'rgb(0, 180, 0)',
-  'rgba(79, 195, 247, 0.9)',
-  'rgba(79, 195, 247, 0.75)',
-  'rgba(79, 195, 247, 0.6)',
-  'rgba(79, 195, 247, 0.45)',
+  PALETTE.gold,
+  // Continuation in deep felt: reads on both the cream and the green squares.
+  alpha(PALETTE.feltDeep, 0.8),
+  alpha(PALETTE.feltDeep, 0.65),
+  alpha(PALETTE.feltDeep, 0.5),
+  alpha(PALETTE.feltDeep, 0.38),
 ]
 
 /**

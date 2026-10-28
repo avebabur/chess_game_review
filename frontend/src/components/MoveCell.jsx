@@ -7,7 +7,7 @@ import MoveNotation from './MoveNotation'
  * `cls` (move classification) drives the colored dot and outline:
  *   - blunder / mistake / inaccuracy → warning dot
  *   - great / best                   → accent dot
- *   - book                           → 📖 icon, no dot
+ *   - book                           → ≡ mark, no dot
  * Highlighted coaching moments get a leading ★ regardless of `cls`.
  */
 const MoveCell = memo(function MoveCell({
@@ -31,7 +31,7 @@ const MoveCell = memo(function MoveCell({
       {(cls === 'blunder' || cls === 'mistake' || cls === 'inaccuracy' || cls === 'great' || cls === 'best') && (
         <span className={`cls-dot cls-dot-${cls}`} />
       )}
-      {cls === 'book' && <span className="book-icon">📖</span>}
+      {cls === 'book' && <span className="book-icon" title="Book move">≡</span>}
       <MoveNotation san={move.user_move} size="sm" />
     </span>
   )

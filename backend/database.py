@@ -1,7 +1,8 @@
 import sqlite3
 import os
 import json
-from datetime import datetime, timedelta
+import threading
+from datetime import datetime, timedelta, timezone
 
 DB_PATH = os.environ.get(
     "CHESS_DB_PATH",
@@ -9,9 +10,13 @@ DB_PATH = os.environ.get(
 )
 
 def get_db():
-    conn = sqlite3.connect(DB_PATH)
+    # timeout: background analyses and UI requests write concurrently; wait for
+    # the lock instead of failing with "database is locked".
+    conn = sqlite3.connect(DB_PATH, timeout=15)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")
+    # Safe with WAL (durable on checkpoint) and much cheaper per commit.
+    conn.execute("PRAGMA synchronous=NORMAL")
     return conn
 
 def init_db():
@@ -68,6 +73,9 @@ def init_db():
         "ALTER TABLE games ADD COLUMN eco TEXT",
         "ALTER TABLE games ADD COLUMN opening TEXT",
         "ALTER TABLE games ADD COLUMN analyzed INTEGER DEFAULT 0",
+        # Consecutive-solve streak drives the puzzle review interval (total
+        # solves did before, so one miss after many solves still jumped 30 days).
+        "ALTER TABLE puzzles ADD COLUMN consecutive_correct INTEGER DEFAULT 0",
     ):
         try:
             conn.execute(ddl)
@@ -173,6 +181,9 @@ def init_db():
         -- games (external_id NULL) are unaffected; chess.com uuids can't double.
         CREATE UNIQUE INDEX IF NOT EXISTS idx_games_source_extid
             ON games(source, external_id);
+        CREATE INDEX IF NOT EXISTS idx_puzzles_game ON puzzles(game_id);
+        CREATE INDEX IF NOT EXISTS idx_puzzles_due ON puzzles(next_review_date);
+        CREATE INDEX IF NOT EXISTS idx_concepts_due ON concept_reviews(next_review_date);
     """)
     # Repertoire branch metadata added after the initial release. An "opening"
     # groups several variations under one family (e.g. all your Caro-Kann
@@ -305,20 +316,74 @@ def put_cloud_eval(fen, payload, source):
     conn.commit()
     conn.close()
 
+def _player_names(conn):
+    """Lower-cased usernames that identify *you* in PGN headers."""
+    rows = conn.execute(
+        "SELECT value FROM settings WHERE key IN ('chesscom_username', 'lichess_username')"
+    ).fetchall()
+    return {r["value"].strip().lower() for r in rows if r["value"] and r["value"].strip()}
+
+
+def _infer_user_color(white, black, names):
+    w = (white or "").strip().lower()
+    b = (black or "").strip().lower()
+    if w in names and b not in names:
+        return "white"
+    if b in names and w not in names:
+        return "black"
+    return None
+
+
+def _insert_game(conn, pgn, analysis):
+    headers = analysis.get("headers", {})
+    now = datetime.now(timezone.utc).replace(tzinfo=None).isoformat() + "Z"
+    white, black = headers.get("White", ""), headers.get("Black", "")
+    cur = conn.execute(
+        """INSERT INTO games (white, black, result, date, pgn, analysis, analysis_updated_at,
+                              user_color, analyzed)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)""",
+        (white, black, headers.get("Result", ""), headers.get("Date", ""), pgn,
+         json.dumps(analysis), now, _infer_user_color(white, black, _player_names(conn))),
+    )
+    return cur.lastrowid
+
+
 def save_game(pgn, analysis):
     conn = get_db()
-    headers = analysis.get("headers", {})
-    now = datetime.utcnow().isoformat() + "Z"
-    cur = conn.execute(
-        """INSERT INTO games (white, black, result, date, pgn, analysis, analysis_updated_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?)""",
-        (headers.get("White", ""), headers.get("Black", ""), headers.get("Result", ""),
-         headers.get("Date", ""), pgn, json.dumps(analysis), now)
-    )
-    game_id = cur.lastrowid
-    conn.commit()
-    conn.close()
-    return game_id
+    try:
+        game_id = _insert_game(conn, pgn, analysis)
+        conn.commit()
+        return game_id
+    finally:
+        conn.close()
+
+
+def store_analysis(pgn, analysis, game_id=None):
+    """Persist a finished analysis in ONE transaction: the game row, its
+    puzzles, and concept exposures. Previously these were four separate
+    commits, so a crash mid-way left a re-analyzed game with no puzzles.
+
+    Creates a new game when `game_id` is None. Returns the game id."""
+    conn = get_db()
+    try:
+        if game_id is None:
+            game_id = _insert_game(conn, pgn, analysis)
+        else:
+            _update_game_analysis(conn, game_id, pgn, analysis)
+            conn.execute("DELETE FROM puzzles WHERE game_id = ?", (game_id,))
+        moments = analysis.get("critical_moments") or []
+        _insert_puzzles(conn, game_id, moments)
+        row = conn.execute(
+            "SELECT white, black, user_color FROM games WHERE id = ?", (game_id,)
+        ).fetchone()
+        side = _user_side(row, _player_names(conn)) if row else None
+        # Concepts are *your* review queue — the opponent's mistakes aren't yours.
+        _sync_concepts(conn, [m for m in moments if _is_mine(m, side)])
+        conn.commit()
+        return game_id
+    finally:
+        conn.close()
+
 
 def save_repertoire_line(color, name, moves_san):
     """Save a repertoire line; exact duplicates (same color + moves) merge."""
@@ -1033,8 +1098,7 @@ def _puzzle_worthy(cm):
     return loss >= 0.7
 
 
-def save_puzzles(game_id, critical_moments):
-    conn = get_db()
+def _insert_puzzles(conn, game_id, critical_moments):
     for cm in critical_moments:
         if not _puzzle_worthy(cm):
             continue
@@ -1052,8 +1116,16 @@ def save_puzzles(game_id, critical_moments):
              cm["side"], cm["move_number"],
              json.dumps(cm.get("explanation_blocks") or []))
         )
-    conn.commit()
-    conn.close()
+
+
+def save_puzzles(game_id, critical_moments):
+    conn = get_db()
+    try:
+        _insert_puzzles(conn, game_id, critical_moments)
+        conn.commit()
+    finally:
+        conn.close()
+
 
 def get_game(game_id):
     conn = get_db()
@@ -1075,26 +1147,20 @@ def get_all_games():
 def get_games_grid():
     """Rich rows for the games browser: player-centric metadata + analyzed flag.
 
-    Pulls denormalized opening/accuracy out of the analysis JSON when present so
-    the grid renders without parsing JSON per row on the client."""
+    Opening/accuracy come out of the analysis JSON via json_extract, so the
+    grid no longer parses every game's full analysis in Python."""
     conn = get_db()
     rows = conn.execute(
         """SELECT id, white, black, result, date, end_time, source, user_color,
-                  user_rating, opp_rating, time_class, opening, eco, analyzed, analysis
+                  user_rating, opp_rating, time_class, eco, analyzed,
+                  COALESCE(NULLIF(opening, ''), json_extract(analysis, '$.opening'), '') AS opening,
+                  json_extract(analysis, '$.white_accuracy') AS white_accuracy,
+                  json_extract(analysis, '$.black_accuracy') AS black_accuracy
            FROM games
            ORDER BY COALESCE(end_time, created_at) DESC, id DESC"""
     ).fetchall()
     conn.close()
-    out = []
-    for r in rows:
-        d = dict(r)
-        analysis = json.loads(d.pop("analysis")) if d.get("analysis") else {}
-        # Imported games carry opening in a column; analyzed games in the JSON.
-        d["opening"] = d.get("opening") or analysis.get("opening") or ""
-        d["white_accuracy"] = analysis.get("white_accuracy")
-        d["black_accuracy"] = analysis.get("black_accuracy")
-        out.append(d)
-    return out
+    return [dict(r) for r in rows]
 
 
 def get_all_games_with_pgn():
@@ -1106,10 +1172,9 @@ def get_all_games_with_pgn():
     return [dict(r) for r in rows]
 
 
-def update_game_analysis(game_id, pgn, analysis):
-    conn = get_db()
+def _update_game_analysis(conn, game_id, pgn, analysis):
     headers = analysis.get("headers", {})
-    now = datetime.utcnow().isoformat() + "Z"
+    now = datetime.now(timezone.utc).replace(tzinfo=None).isoformat() + "Z"
     conn.execute(
         """UPDATE games SET white = ?, black = ?, result = ?, date = ?, pgn = ?, analysis = ?,
            analyzed = 1, analysis_updated_at = ? WHERE id = ?""",
@@ -1124,8 +1189,21 @@ def update_game_analysis(game_id, pgn, analysis):
             game_id,
         ),
     )
-    conn.commit()
-    conn.close()
+    row = conn.execute("SELECT white, black, user_color FROM games WHERE id = ?",
+                       (game_id,)).fetchone()
+    if row and not row["user_color"]:
+        color = _infer_user_color(row["white"], row["black"], _player_names(conn))
+        if color:
+            conn.execute("UPDATE games SET user_color = ? WHERE id = ?", (color, game_id))
+
+
+def update_game_analysis(game_id, pgn, analysis):
+    conn = get_db()
+    try:
+        _update_game_analysis(conn, game_id, pgn, analysis)
+        conn.commit()
+    finally:
+        conn.close()
 
 
 def save_reanalyze_job(status_id, payload, scope=None, game_id=None, analysis_marker=None):
@@ -1197,9 +1275,15 @@ def delete_game(game_id):
     return True
 
 def get_recent_games(limit=5):
+    # json_extract pulls four scalars in C instead of json.loads-ing every
+    # game's full analysis (moves + engine lines) in Python.
     conn = get_db()
     rows = conn.execute(
-        """SELECT id, white, black, result, date, analysis, created_at
+        """SELECT id, white, black, result, date, created_at,
+                  json_extract(analysis, '$.opening') AS opening,
+                  json_extract(analysis, '$.eco') AS eco,
+                  json_extract(analysis, '$.white_accuracy') AS white_accuracy,
+                  json_extract(analysis, '$.black_accuracy') AS black_accuracy
            FROM games ORDER BY id DESC LIMIT ?""",
         (limit,)
     ).fetchall()
@@ -1207,29 +1291,30 @@ def get_recent_games(limit=5):
     results = []
     for r in rows:
         d = dict(r)
-        analysis = json.loads(d["analysis"]) if d["analysis"] else {}
-        results.append({
-            "id": d["id"],
-            "white": d["white"],
-            "black": d["black"],
-            "result": d["result"],
-            "date": d["date"],
-            "opening": analysis.get("opening", ""),
-            "eco": analysis.get("eco", ""),
-            "white_accuracy": analysis.get("white_accuracy"),
-            "black_accuracy": analysis.get("black_accuracy"),
-            "created_at": d["created_at"],
-        })
+        d["opening"] = d["opening"] or ""
+        d["eco"] = d["eco"] or ""
+        results.append(d)
     return results
 
 def get_due_puzzles(limit=10, theme=None):
     conn = get_db()
     now = datetime.now().isoformat()
-    rows = conn.execute(
-        """SELECT * FROM puzzles WHERE next_review_date <= ?
-           ORDER BY next_review_date ASC LIMIT ?""",
-        (now, limit * 3 if theme else limit)
-    ).fetchall()
+    # Theme filtering happens in SQL. It used to fetch limit*3 due rows and
+    # filter in Python, so matching puzzles further down the queue were missed.
+    if theme:
+        rows = conn.execute(
+            """SELECT * FROM puzzles
+               WHERE next_review_date <= ?
+                 AND EXISTS (SELECT 1 FROM json_each(puzzles.theme_tags) WHERE value = ?)
+               ORDER BY next_review_date ASC LIMIT ?""",
+            (now, theme, limit),
+        ).fetchall()
+    else:
+        rows = conn.execute(
+            """SELECT * FROM puzzles WHERE next_review_date <= ?
+               ORDER BY next_review_date ASC LIMIT ?""",
+            (now, limit),
+        ).fetchall()
     conn.close()
     result = []
     for r in rows:
@@ -1237,34 +1322,143 @@ def get_due_puzzles(limit=10, theme=None):
         d["theme_tags"] = json.loads(d["theme_tags"]) if d["theme_tags"] else []
         d["follow_up_line"] = json.loads(d["follow_up_line"]) if d["follow_up_line"] else []
         d["explanation_blocks"] = json.loads(d["explanation_blocks"]) if d.get("explanation_blocks") else []
-        if theme and theme not in d["theme_tags"]:
-            continue
         result.append(d)
-        if len(result) >= limit:
-            break
     return result
 
 
-def aggregate_recent_misses(days=30):
-    """Count missed motif types across recent game analyses."""
+# --- Cross-game aggregation --------------------------------------------------
+# Every dashboard endpoint walks all analyzed games. Each analysis JSON is
+# ~250 kB (per-move engine lines), and the dashboard fires five requests, so
+# re-parsing everything per request dominated load time. We keep a slim
+# per-game projection, keyed by (analysis_updated_at, length) so a
+# re-analysis invalidates it.
+
+_SUMMARY_CACHE = {}
+_SUMMARY_LOCK = threading.Lock()
+
+_MOMENT_KEYS = ("type", "side", "move_index", "move_number", "user_move",
+                "theme_tags", "missed_motifs")
+
+
+def _slim_moment(m):
+    out = {k: m.get(k) for k in _MOMENT_KEYS}
+    trap = m.get("thinking_trap")
+    out["thinking_trap"] = {"label": trap.get("label")} if isinstance(trap, dict) else None
+    return out
+
+
+def _summarize_analysis(analysis):
+    return {
+        "opening": analysis.get("opening") or "",
+        "white_accuracy": analysis.get("white_accuracy"),
+        "black_accuracy": analysis.get("black_accuracy"),
+        "critical_moments": [_slim_moment(m) for m in analysis.get("critical_moments") or []],
+        "highlight_moments": [_slim_moment(m) for m in analysis.get("highlight_moments") or []],
+        "drift_spans": [
+            {
+                "side": span.get("side"),
+                "half_moves": (span.get("half_moves") or [])[:1],
+                "start_move": span.get("start_move"),
+            }
+            for span in analysis.get("drift_spans") or []
+        ],
+    }
+
+
+def _user_side(row, names):
+    """'White' / 'Black' for the side *you* played, or None when unknown."""
+    keys = row.keys()
+    color = row["user_color"] if "user_color" in keys else None
+    color = color or _infer_user_color(row["white"], row["black"], names)
+    return {"white": "White", "black": "Black"}.get(color)
+
+
+def _is_mine(moment, side):
+    # Unknown side (a pasted PGN with no matching username): keep both sides,
+    # which is the best we can do.
+    return side is None or moment.get("side") == side
+
+
+def _game_day(row):
+    """When the game was PLAYED (not imported): end_time, PGN date, created_at."""
+    if row["end_time"]:
+        return row["end_time"][:10]
+    date = (row["date"] or "").replace(".", "-")
+    if len(date) == 10 and "?" not in date:
+        return date
+    return (row["created_at"] or "")[:10]
+
+
+def iter_game_summaries():
+    """[(meta, summary)] for every analyzed game, newest first.
+
+    meta has id/white/black/result/user_side/day; summary is the slim
+    projection from `_summarize_analysis`."""
+    conn = get_db()
+    try:
+        names = _player_names(conn)
+        rows = conn.execute(
+            """SELECT id, white, black, result, date, end_time, created_at, user_color,
+                      analysis_updated_at, length(analysis) AS alen
+               FROM games WHERE analysis IS NOT NULL ORDER BY id DESC"""
+        ).fetchall()
+        with _SUMMARY_LOCK:
+            live = {r["id"] for r in rows}
+            for stale in [k for k in _SUMMARY_CACHE if k not in live]:
+                del _SUMMARY_CACHE[stale]
+            missing = [
+                r["id"] for r in rows
+                if _SUMMARY_CACHE.get(r["id"], (None,))[0] != (r["analysis_updated_at"], r["alen"])
+            ]
+        for start in range(0, len(missing), 200):
+            ids = missing[start:start + 200]
+            for r in conn.execute(
+                f"""SELECT id, analysis, analysis_updated_at, length(analysis) AS alen
+                    FROM games WHERE id IN ({",".join("?" * len(ids))})""",
+                ids,
+            ):
+                try:
+                    summary = _summarize_analysis(json.loads(r["analysis"]) or {})
+                except (ValueError, AttributeError):
+                    continue
+                with _SUMMARY_LOCK:
+                    _SUMMARY_CACHE[r["id"]] = ((r["analysis_updated_at"], r["alen"]), summary)
+        out = []
+        with _SUMMARY_LOCK:
+            for r in rows:
+                entry = _SUMMARY_CACHE.get(r["id"])
+                if not entry:
+                    continue
+                meta = {
+                    "id": r["id"], "white": r["white"], "black": r["black"],
+                    "result": r["result"], "user_side": _user_side(r, names),
+                    "day": _game_day(r),
+                }
+                out.append((meta, entry[1]))
+        return out
+    finally:
+        conn.close()
+
+
+def aggregate_recent_misses(days=30, summaries=None):
+    """Count *your* missed motif types across games played in the last N days."""
     from analyzer import PATTERN_TIPS
 
-    conn = get_db()
-    cutoff = (datetime.now() - timedelta(days=days)).isoformat()
-    rows = conn.execute(
-        "SELECT analysis, created_at FROM games WHERE created_at >= ? ORDER BY id DESC",
-        (cutoff,),
-    ).fetchall()
-    conn.close()
+    if summaries is None:
+        summaries = iter_game_summaries()
+    cutoff = (datetime.now() - timedelta(days=days)).date().isoformat()
 
     counts = {}
     games_with = {}
-    for row in rows:
-        analysis = json.loads(row["analysis"]) if row["analysis"] else {}
-        for cm in analysis.get("critical_moments") or []:
+    for meta, analysis in summaries:
+        if meta["day"] < cutoff:
+            continue
+        for cm in analysis["critical_moments"]:
+            if not _is_mine(cm, meta["user_side"]):
+                continue
             for motif in cm.get("missed_motifs") or []:
                 counts[motif] = counts.get(motif, 0) + 1
-                games_with[motif] = games_with.get(motif, 0) + 1
+                games_with.setdefault(motif, set()).add(meta["id"])
 
     recent = []
     for motif, count in counts.items():
@@ -1278,20 +1472,19 @@ def aggregate_recent_misses(days=30):
         recent.append({
             "motif": motif,
             "count": count,
-            "games": games_with.get(motif, count),
+            "games": len(games_with.get(motif, ())),
             "tip": tip,
         })
     recent.sort(key=lambda x: -x["count"])
     return recent
 
 
-def aggregate_player_patterns():
-    """Cross-game thinking traps, themes, and strengths from all analyses."""
+def aggregate_player_patterns(summaries=None):
+    """Cross-game thinking traps, themes, and strengths from *your* moves."""
     from analyzer import PATTERN_TIPS
 
-    conn = get_db()
-    rows = conn.execute("SELECT id, analysis FROM games ORDER BY id DESC").fetchall()
-    conn.close()
+    if summaries is None:
+        summaries = iter_game_summaries()
 
     trap_agg = {}
     theme_agg = {}
@@ -1304,16 +1497,16 @@ def aggregate_player_patterns():
         )
 
     def _add_moment(bucket, key, game_id, cm):
-        entry = bucket.setdefault(key, {"count": 0, "game_ids": set(), "moments": []})
+        entry = bucket.setdefault(key, {"count": 0, "game_ids": set(), "moments": [], "keys": set()})
         entry["count"] += 1
         entry["game_ids"].add(game_id)
         move_idx = cm.get("move_index")
         if move_idx is None:
             return
         moment_key = (game_id, move_idx)
-        existing_keys = {(m["game_id"], m["move_index"]) for m in entry["moments"]}
-        if moment_key in existing_keys:
+        if moment_key in entry["keys"]:
             return
+        entry["keys"].add(moment_key)
         entry["moments"].append({
             "game_id": game_id,
             "move_number": cm.get("move_number"),
@@ -1321,11 +1514,13 @@ def aggregate_player_patterns():
             "user_move": cm.get("user_move"),
         })
 
-    for row in rows:
-        game_id = row["id"]
-        analysis = json.loads(row["analysis"]) if row["analysis"] else {}
+    for meta, analysis in summaries:
+        game_id = meta["id"]
+        side = meta["user_side"]
 
-        for cm in analysis.get("critical_moments") or []:
+        for cm in analysis["critical_moments"]:
+            if not _is_mine(cm, side):
+                continue
             trap = (cm.get("thinking_trap") or {}).get("label")
             if trap:
                 _add_moment(trap_agg, trap, game_id, cm)
@@ -1333,10 +1528,12 @@ def aggregate_player_patterns():
                 if tag:
                     _add_moment(theme_agg, tag, game_id, cm)
 
-        # Positional drift is now a SPAN-level phenomenon (drift.py), not a
-        # per-move trap. Count each stored drift span as one "Positional drift"
-        # occurrence, linking to the span's first move.
-        for span in analysis.get("drift_spans") or []:
+        # Positional drift is a SPAN-level phenomenon (drift.py), not a
+        # per-move trap. Count each of your drift spans as one occurrence,
+        # linking to the span's first move.
+        for span in analysis["drift_spans"]:
+            if not _is_mine(span, side):
+                continue
             half_moves = span.get("half_moves") or []
             _add_moment(trap_agg, "Positional drift", game_id, {
                 "move_index": half_moves[0] if half_moves else None,
@@ -1344,7 +1541,9 @@ def aggregate_player_patterns():
                 "user_move": None,
             })
 
-        for hm in analysis.get("highlight_moments") or []:
+        for hm in analysis["highlight_moments"]:
+            if not _is_mine(hm, side):
+                continue
             for tag in hm.get("theme_tags") or []:
                 if tag:
                     _add_moment(strength_agg, tag, game_id, hm)
@@ -1459,8 +1658,7 @@ def extract_concepts_from_moment(cm):
     return out
 
 
-def record_concept_exposure(concept_key, label, kind="theme"):
-    conn = get_db()
+def _record_concept_exposure(conn, concept_key, label, kind="theme"):
     _ensure_concept(conn, concept_key, label, kind)
     conn.execute(
         """UPDATE concept_reviews
@@ -1472,8 +1670,15 @@ def record_concept_exposure(concept_key, label, kind="theme"):
            WHERE concept_key = ?""",
         (concept_key,),
     )
-    conn.commit()
-    conn.close()
+
+
+def record_concept_exposure(concept_key, label, kind="theme"):
+    conn = get_db()
+    try:
+        _record_concept_exposure(conn, concept_key, label, kind)
+        conn.commit()
+    finally:
+        conn.close()
 
 
 def record_concept_attempt(concept_key, label, kind, solved):
@@ -1504,10 +1709,31 @@ def record_concept_attempt(concept_key, label, kind, solved):
     conn.close()
 
 
-def sync_concepts_from_moments(critical_moments):
+def _sync_concepts(conn, critical_moments):
     for cm in critical_moments:
         for key, label, kind in extract_concepts_from_moment(cm):
-            record_concept_exposure(key, label, kind)
+            _record_concept_exposure(conn, key, label, kind)
+
+
+def sync_concepts_from_moments(critical_moments):
+    # One connection + one commit for the whole game (was one per concept).
+    conn = get_db()
+    try:
+        _sync_concepts(conn, critical_moments)
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def get_concept(concept_key):
+    conn = get_db()
+    try:
+        row = conn.execute(
+            "SELECT * FROM concept_reviews WHERE concept_key = ?", (concept_key,),
+        ).fetchone()
+        return dict(row) if row else None
+    finally:
+        conn.close()
 
 
 def get_due_concepts(limit=5):
@@ -1551,13 +1777,12 @@ def _move_range_label(move_number):
     return "16+"
 
 
-def aggregate_opening_mistakes(opening_filter=None):
-    """Group critical moments in the opening phase by opening + move range + pattern."""
+def aggregate_opening_mistakes(opening_filter=None, summaries=None):
+    """Group *your* opening-phase mistakes by opening + move range + pattern."""
     from analyzer import PATTERN_TIPS
 
-    conn = get_db()
-    rows = conn.execute("SELECT id, analysis FROM games ORDER BY id DESC").fetchall()
-    conn.close()
+    if summaries is None:
+        summaries = iter_game_summaries()
 
     opening_agg = {}
 
@@ -1567,10 +1792,9 @@ def aggregate_opening_mistakes(opening_filter=None):
             PATTERN_TIPS.get(name.replace("_", " "), f"Watch for {name} in this opening."),
         )
 
-    for row in rows:
-        game_id = row["id"]
-        analysis = json.loads(row["analysis"]) if row["analysis"] else {}
-        opening = analysis.get("opening") or ""
+    for meta, analysis in summaries:
+        game_id = meta["id"]
+        opening = analysis["opening"]
         if not opening:
             continue
         if opening_filter and opening.lower() != opening_filter.lower():
@@ -1584,7 +1808,9 @@ def aggregate_opening_mistakes(opening_filter=None):
         })
         bucket["games"].add(game_id)
 
-        for cm in analysis.get("critical_moments") or []:
+        for cm in analysis["critical_moments"]:
+            if not _is_mine(cm, meta["user_side"]):
+                continue
             move_num = cm.get("move_number") or 0
             if move_num > 15:
                 continue
@@ -1660,10 +1886,10 @@ def get_study_recommendations(puzzle_limit=5):
     """Prioritized study plan: top weakness → puzzles + concept drills."""
     from analyzer import PATTERN_TIPS
 
-    patterns = aggregate_player_patterns()
-    recent = aggregate_recent_misses()
-    stats = get_dashboard_stats()
-    weakness = stats.get("weakness_profile") or []
+    summaries = iter_game_summaries()
+    patterns = aggregate_player_patterns(summaries)
+    recent = aggregate_recent_misses(summaries=summaries)
+    weakness = puzzle_weakness_profile()
 
     priority = None
     theme = None
@@ -1738,31 +1964,26 @@ def get_study_recommendations(puzzle_limit=5):
 
 
 def get_improvement_timeline(weeks=12):
-    """Weekly trends: accuracy, blunders, missed motifs."""
+    """Weekly trends of YOUR accuracy, blunders and missed motifs, bucketed by
+    the week each game was played (import time put every chess.com game in one
+    week, and the opponent's accuracy/blunders used to be averaged in)."""
     from analyzer import PATTERN_TIPS
 
-    conn = get_db()
-    cutoff = (datetime.now() - timedelta(weeks=weeks)).isoformat()
-    rows = conn.execute(
-        """SELECT id, analysis, created_at FROM games
-           WHERE created_at >= ? ORDER BY created_at ASC""",
-        (cutoff,),
-    ).fetchall()
-    conn.close()
+    cutoff = (datetime.now() - timedelta(weeks=weeks)).date().isoformat()
 
     week_buckets = {}
     motif_by_week = {}
 
-    for row in rows:
-        created = row["created_at"] or ""
-        week_key = created[:10]
-        if len(created) >= 10:
-            try:
-                dt = datetime.fromisoformat(created[:19])
-                week_start = dt - timedelta(days=dt.weekday())
-                week_key = week_start.date().isoformat()
-            except ValueError:
-                pass
+    for meta, analysis in sorted(iter_game_summaries(), key=lambda x: x[0]["day"]):
+        day = meta["day"]
+        if day < cutoff:
+            continue
+        week_key = day
+        try:
+            dt = datetime.fromisoformat(day)
+            week_key = (dt - timedelta(days=dt.weekday())).date().isoformat()
+        except ValueError:
+            pass
 
         bucket = week_buckets.setdefault(week_key, {
             "week": week_key,
@@ -1773,15 +1994,21 @@ def get_improvement_timeline(weeks=12):
             "motif_misses": {},
         })
         bucket["games"] += 1
-        analysis = json.loads(row["analysis"]) if row["analysis"] else {}
-        wa = analysis.get("white_accuracy")
-        ba = analysis.get("black_accuracy")
-        for acc in (wa, ba):
+        side = meta["user_side"]
+        if side == "White":
+            accs = (analysis["white_accuracy"],)
+        elif side == "Black":
+            accs = (analysis["black_accuracy"],)
+        else:
+            accs = (analysis["white_accuracy"], analysis["black_accuracy"])
+        for acc in accs:
             if acc is not None:
                 bucket["accuracy_sum"] += acc
                 bucket["accuracy_count"] += 1
 
-        for cm in analysis.get("critical_moments") or []:
+        for cm in analysis["critical_moments"]:
+            if not _is_mine(cm, side):
+                continue
             if cm.get("type") == "blunder":
                 bucket["blunders"] += 1
             for motif in cm.get("missed_motifs") or []:
@@ -1845,17 +2072,18 @@ def record_attempt(puzzle_id, solved):
     times_solved = puzzle["times_solved"] + (1 if solved else 0)
 
     if solved:
-        streak = min(puzzle["times_solved"] + 1, len(SPACED_INTERVALS))
+        streak = min((puzzle["consecutive_correct"] or 0) + 1, len(SPACED_INTERVALS))
         interval = SPACED_INTERVALS[streak - 1]
     else:
+        streak = 0
         interval = 1
 
     next_review = (datetime.now() + timedelta(days=interval)).isoformat()
 
     conn.execute(
-        """UPDATE puzzles SET times_shown = ?, times_solved = ?,
+        """UPDATE puzzles SET times_shown = ?, times_solved = ?, consecutive_correct = ?,
            interval_days = ?, next_review_date = ? WHERE id = ?""",
-        (times_shown, times_solved, interval, next_review, puzzle_id)
+        (times_shown, times_solved, streak, interval, next_review, puzzle_id)
     )
 
     tags = json.loads(puzzle["theme_tags"]) if puzzle["theme_tags"] else []
@@ -1890,17 +2118,18 @@ def record_attempt(puzzle_id, solved):
     conn.close()
     return True
 
-def get_dashboard_stats():
-    conn = get_db()
-    game_count = conn.execute("SELECT COUNT(*) as c FROM games").fetchone()["c"]
-    puzzle_count = conn.execute("SELECT COUNT(*) as c FROM puzzles").fetchone()["c"]
-    total_shown = conn.execute("SELECT COALESCE(SUM(times_shown), 0) as c FROM puzzles").fetchone()["c"]
-    total_solved = conn.execute("SELECT COALESCE(SUM(times_solved), 0) as c FROM puzzles").fetchone()["c"]
-
-    theme_rows = conn.execute(
-        """SELECT theme_tags, times_shown, times_solved FROM puzzles
-           WHERE times_shown > 0"""
-    ).fetchall()
+def puzzle_weakness_profile(conn=None):
+    own = conn is None
+    if own:
+        conn = get_db()
+    try:
+        theme_rows = conn.execute(
+            """SELECT theme_tags, times_shown, times_solved FROM puzzles
+               WHERE times_shown > 0"""
+        ).fetchall()
+    finally:
+        if own:
+            conn.close()
 
     theme_stats = {}
     for row in theme_rows:
@@ -1916,35 +2145,66 @@ def get_dashboard_stats():
         accuracy = (stats["solved"] / stats["shown"] * 100) if stats["shown"] > 0 else 0
         weakness_profile.append({"theme": tag, "accuracy": round(accuracy, 1), **stats})
     weakness_profile.sort(key=lambda x: x["accuracy"])
+    return weakness_profile
 
-    game_rows = conn.execute("SELECT analysis, result FROM games").fetchall()
+
+def _opening_profile(conn):
+    """Win/draw/loss per opening from YOUR point of view, over every game
+    (imported ones too). It used to treat 1-0 as a win even when you had Black.
+    Games where we can't tell which side you played count toward `games` only."""
+    names = _player_names(conn)
+    rows = conn.execute(
+        """SELECT white, black, result, user_color,
+                  COALESCE(json_extract(analysis, '$.opening'), opening) AS opening_name
+           FROM games"""
+    ).fetchall()
     opening_stats = {}
-    for row in game_rows:
-        analysis = json.loads(row["analysis"]) if row["analysis"] else {}
-        opening = analysis.get("opening", "")
+    for row in rows:
+        opening = row["opening_name"]
         if not opening:
             continue
-        if opening not in opening_stats:
-            opening_stats[opening] = {"games": 0, "wins": 0, "losses": 0, "draws": 0}
-        opening_stats[opening]["games"] += 1
+        stats = opening_stats.setdefault(opening, {"games": 0, "wins": 0, "losses": 0, "draws": 0})
+        stats["games"] += 1
+        side = _user_side(row, names)
         result = row["result"]
-        if result == "1-0":
-            opening_stats[opening]["wins"] += 1
-        elif result == "0-1":
-            opening_stats[opening]["losses"] += 1
+        if side is None or result not in ("1-0", "0-1", "1/2-1/2"):
+            continue
+        if result == "1/2-1/2":
+            stats["draws"] += 1
+        elif (result == "1-0") == (side == "White"):
+            stats["wins"] += 1
         else:
-            opening_stats[opening]["draws"] += 1
+            stats["losses"] += 1
 
     opening_profile = []
     for name, stats in opening_stats.items():
-        win_rate = round(stats["wins"] / stats["games"] * 100, 1) if stats["games"] > 0 else 0
+        decided = stats["wins"] + stats["losses"] + stats["draws"]
+        win_rate = round(stats["wins"] / decided * 100, 1) if decided else 0
         opening_profile.append({"opening": name, "win_rate": win_rate, **stats})
     opening_profile.sort(key=lambda x: -x["games"])
+    return opening_profile
 
-    conn.close()
+
+def get_dashboard_stats():
+    conn = get_db()
+    try:
+        game_count = conn.execute(
+            "SELECT COALESCE(SUM(analyzed), 0) AS c FROM games"
+        ).fetchone()["c"]
+        puzzle_row = conn.execute(
+            """SELECT COUNT(*) AS n, COALESCE(SUM(times_shown), 0) AS shown,
+                      COALESCE(SUM(times_solved), 0) AS solved FROM puzzles"""
+        ).fetchone()
+        weakness_profile = puzzle_weakness_profile(conn)
+        opening_profile = _opening_profile(conn)
+    finally:
+        conn.close()
+
+    total_shown = puzzle_row["shown"]
+    total_solved = puzzle_row["solved"]
     return {
         "games_analyzed": game_count,
-        "total_puzzles": puzzle_count,
+        "total_puzzles": puzzle_row["n"],
         "puzzles_attempted": total_shown,
         "puzzles_solved": total_solved,
         "overall_accuracy": round(total_solved / total_shown * 100, 1) if total_shown > 0 else 0,

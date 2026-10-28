@@ -1,15 +1,21 @@
 .games { max-width: 1000px; margin-inline: auto; padding: 8px 4px 40px; }
 
 .games-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 18px; }
-.games-head h1 { font-size: 27px; font-weight: 760; letter-spacing: -0.02em; margin: 0; }
+.games-head h1 { font-size: 27px; font-weight: 400; margin: 0; font-family: var(--font-display); }
 .games-count { color: var(--faint); font-size: 13.5px; font-variant-numeric: tabular-nums; }
 
 .games-filters { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 18px; }
 .games-times { display: flex; gap: 6px; }
 .games-search {
-  flex: 1; min-width: 150px;
-  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm);
-  color: var(--text); font: inherit; font-size: 13.5px; padding: 8px 13px;
+  flex: 1;
+  min-width: 150px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font: inherit;
+  font-size: 13.5px;
+  padding: 8px 13px;
 }
 .games-search:focus { outline: none; border-color: var(--accent-line); box-shadow: var(--ring); }
 
@@ -36,8 +42,8 @@
 .game-row2:disabled { cursor: default; opacity: 0.8; }
 
 .gr-color { width: 10px; height: 10px; border-radius: 50%; border: 1px solid var(--line-strong); }
-.gr-color.white { background: #efe7d4; }
-.gr-color.black { background: #2a2722; border-color: #555; }
+.gr-color.white { background: var(--cream); }
+.gr-color.black { background: var(--felt); border-color: var(--line-strong); }
 
 .gr-players { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
 .gr-names { font-size: 14px; font-weight: 640; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -47,17 +53,17 @@
 
 .gr-tc { font-size: 11.5px; color: var(--muted); text-transform: capitalize; text-align: center; }
 
-.gr-res { font-size: 12.5px; font-weight: 720; text-align: center; padding: 3px 0; border-radius: 5px; font-variant-numeric: tabular-nums; }
-.gr-res.win { color: var(--win); background: rgba(116, 178, 92, 0.13); }
-.gr-res.loss { color: var(--loss); background: rgba(214, 95, 71, 0.13); }
-.gr-res.draw { color: var(--draw); background: rgba(148, 139, 120, 0.14); }
+.gr-res { font-size: 12.5px; font-weight: 720; text-align: center; padding: 3px 0; border-radius: 4px; font-variant-numeric: tabular-nums; }
+.gr-res.win { color: var(--win); background: color-mix(in srgb, var(--good) 13%, transparent); }
+.gr-res.loss { color: var(--loss); background: color-mix(in srgb, var(--red) 13%, transparent); }
+.gr-res.draw { color: var(--draw); background: color-mix(in srgb, var(--felt-3) 14%, transparent); }
 .gr-res.unknown { color: var(--faint); }
 
 .gr-date { font-size: 12px; color: var(--faint); text-align: right; font-variant-numeric: tabular-nums; }
 
 .gr-action { text-align: right; }
 .gr-go { font-size: 12.5px; color: var(--muted); font-weight: 600; }
-.gr-analyze { font-size: 12px; font-weight: 700; color: var(--accent-2); border: 1px solid var(--accent-line); padding: 4px 11px; border-radius: 999px; }
+.gr-analyze { font-size: 12px; font-weight: 700; color: var(--accent-2); border: 1px solid var(--accent-line); padding: 4px 11px; border-radius: 3px; }
 .game-row2:hover .gr-go { color: var(--accent-2); }
 .gr-spin { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--line-strong); border-top-color: var(--accent); border-radius: 50%; animation: gspin 0.7s linear infinite; }
 @keyframes gspin { to { transform: rotate(360deg); } }
@@ -69,4 +75,15 @@
 
 .games-empty { padding: 50px; text-align: center; color: var(--muted); border: 1px solid var(--line); border-radius: var(--radius); }
 .games-skel { display: flex; flex-direction: column; gap: 8px; }
-.gskel { height: 52px; border-radius: var(--radius-sm); background: linear-gradient(90deg, var(--surface) 25%, var(--surface-2) 50%, var(--surface) 75%); background-size: 800px 100%; animation: op-shimmer 1.4s ease-in-out infinite; }
+.gskel { height: 52px; border-radius: var(--radius-sm); background: var(--surface); background-size: 800px 100%; animation: op-shimmer 1.4s ease-in-out infinite; }
+
+.games-more {
+  width: 100%; border: 0; border-top: 1px solid var(--line); border-radius: 0; padding: 13px;
+  background: transparent; color: var(--gold-ink); cursor: pointer;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+}
+.games-more:hover { background: var(--accent-soft); }
+.games-error {
+  margin-bottom: 14px; padding: 10px 14px; border: 1px solid var(--red); border-radius: var(--radius-sm);
+  color: var(--red-ink); font-size: 14px;
+}

@@ -3,13 +3,14 @@ import { buildVariationLine } from '../variationUtils'
 import { blocksFromMoment, findActiveStep } from '../explanationBlocks'
 import ExplanationBlocks, { AlternativesList } from './ExplanationBlocks'
 import MoveNotation from './MoveNotation'
+import { PALETTE } from '../palette'
 
 const TYPE_COLORS = {
-  blunder: '#e74c3c',
-  drift: '#f39c12',
-  missed_tactic: '#3498db',
-  mistake: '#e67e22',
-  highlight: '#f1c40f',
+  blunder: PALETTE.red,
+  drift: PALETTE.gold,
+  missed_tactic: PALETTE.redInk,
+  mistake: PALETTE.redInk,
+  highlight: PALETTE.goldInk,
 }
 
 const TYPE_LABELS = {
@@ -65,7 +66,7 @@ export default memo(function ExplanationPanel({
     )
   }
 
-  const momentColor = TYPE_COLORS[moment.type] || '#888'
+  const momentColor = TYPE_COLORS[moment.type] || PALETTE.faint
 
   return (
     <div

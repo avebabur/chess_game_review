@@ -6,15 +6,13 @@ export const BOARD_ANIMATION_MS = 208
 const PIECE_KEYS = ['wP', 'wB', 'wN', 'wR', 'wQ', 'wK', 'bP', 'bB', 'bN', 'bR', 'bQ', 'bK']
 
 export const boardSquareStyles = {
+  // Flat printed squares: cream and a muted felt green.
   customBoardStyle: {
     borderRadius: '2px',
-    backgroundImage: 'url(/board/blue2.jpg)',
-    backgroundSize: '100% 100%',
-    backgroundRepeat: 'no-repeat',
     overflow: 'hidden',
   },
-  customLightSquareStyle: { backgroundColor: 'rgba(255, 255, 255, 0.02)' },
-  customDarkSquareStyle: { backgroundColor: 'rgba(0, 0, 0, 0.06)' },
+  customLightSquareStyle: { backgroundColor: '#e6dcc4' },
+  customDarkSquareStyle: { backgroundColor: '#6f9378' },
   showBoardNotation: false,
 }
 

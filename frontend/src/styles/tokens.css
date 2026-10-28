@@ -1,54 +1,112 @@
-/* Chess Review — design system (v2).
- * Scoped under `.cr2` so it can live alongside the legacy App.css during the
- * incremental rewrite. New screens render inside a `.cr2` wrapper. */
-.cr2 {
-  --bg: #16140f;
-  --surface: #211e18;
-  --surface-2: #2a261e;
-  --surface-3: #34301f;
-  --line: #3d3729;
-  --line-strong: #4f4836;
+/* Chess Review — design tokens.
+ *
+ * Poker-table theme: deep felt green, cream ink, antique gold accents and a
+ * muted card red used sparingly. Calm and flat like a printed page — no
+ * gradients, glows or soft shadows. Every stylesheet (legacy App.css included)
+ * reads colours from here, so the palette lives in one place. */
+:root {
+  /* Felt */
+  --felt: #133827;
+  --felt-2: #18442f;     /* cards, panels */
+  --felt-3: #1f5840;     /* raised / hover / selected */
+  --felt-deep: #0e2c1e;  /* wells, inputs, the eval bar's dark side */
+  --ink: #0a1f15;        /* darkest — text on gold or cream fills */
 
-  --text: #f1ece1;
-  --muted: #a8a08d;
-  --faint: #756e5d;
+  /* Ink */
+  --cream: #f2ebdd;
+  --muted: #b9bca9;
+  --faint: #8c9a89;
 
-  --accent: #e0a93f;
-  --accent-2: #f0c46a;
-  --accent-soft: rgba(224, 169, 63, 0.13);
-  --accent-line: rgba(224, 169, 63, 0.4);
+  /* Accents */
+  --gold: #c29a45;
+  --gold-ink: #d9b871;   /* gold as small text on felt */
+  --red: #b1262b;        /* fills: blunder badges, losses */
+  --red-ink: #e0827a;    /* card red lightened enough to read as text on felt */
+  --good: #a9c79f;       /* best / good moves — a pale sage that reads on felt */
 
-  --win: #74b25c;
-  --draw: #948b78;
-  --loss: #d65f47;
-  --info: #5fa8d3;
+  /* Lines */
+  --line: #2b5a44;
+  --line-strong: #3d6e56;
 
-  --radius: 14px;
-  --radius-sm: 9px;
-  --radius-xs: 6px;
-  --shadow: 0 10px 34px rgba(0, 0, 0, 0.38);
-  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.25);
-  --ring: 0 0 0 2px var(--accent-line);
+  --gold-soft: color-mix(in srgb, var(--gold) 14%, transparent);
+  --gold-line: color-mix(in srgb, var(--gold) 50%, transparent);
 
+  /* Type */
+  --font-display: 'Libre Caslon Display', 'Libre Caslon Text', Georgia, serif;
+  --font-body: 'Libre Caslon Text', Georgia, 'Times New Roman', serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace;
+
+  --radius: 4px;
+  --radius-sm: 3px;
+  --radius-xs: 2px;
+  --ring: 0 0 0 1px var(--gold);
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  color: var(--text);
+  color-scheme: dark;
+}
+
+html { background: var(--felt); }
+
+body {
+  margin: 0;
+  background: var(--felt);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+}
+
+h1, h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* Small uppercase mono labels. */
+.label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+:focus-visible { outline: 1px solid var(--gold); outline-offset: 2px; }
+::selection { background: color-mix(in srgb, var(--gold) 35%, transparent); color: var(--cream); }
+
+/* Newer screens render inside `.cr2`; these aliases keep their stylesheets on
+ * the shared palette. */
+.cr2 {
+  --bg: var(--felt);
+  --surface: var(--felt-2);
+  --surface-2: var(--felt-3);
+  --surface-3: var(--felt-3);
+  --text: var(--cream);
+  --accent: var(--gold);
+  --accent-2: var(--gold-ink);
+  --accent-soft: var(--gold-soft);
+  --accent-line: var(--gold-line);
+  --win: var(--good);
+  --draw: var(--muted);
+  --loss: var(--red-ink);
+  --info: var(--cream);
+
+  font-family: var(--font-body);
+  color: var(--cream);
 }
 
 .cr2 *,
 .cr2 *::before,
 .cr2 *::after { box-sizing: border-box; }
 
-.cr2 ::selection { background: var(--accent-soft); }
-
-/* Buttons / chips shared primitives */
+/* Shared primitives */
 .cr2 .seg {
   display: inline-flex;
-  padding: 3px;
+  padding: 2px;
   gap: 2px;
-  background: var(--surface);
+  background: var(--felt-deep);
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
 }
@@ -57,43 +115,39 @@
   border: 0;
   background: transparent;
   color: var(--muted);
-  font: inherit;
-  font-weight: 600;
-  font-size: 13px;
-  padding: 7px 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 7px 14px;
   border-radius: var(--radius-xs);
   cursor: pointer;
   transition: color 0.15s var(--ease), background 0.15s var(--ease);
 }
-.cr2 .seg button:hover { color: var(--text); }
-.cr2 .seg button.on {
-  color: #1a160e;
-  background: linear-gradient(180deg, var(--accent-2), var(--accent));
-  box-shadow: var(--shadow-sm);
-}
+.cr2 .seg button:hover { color: var(--cream); }
+.cr2 .seg button.on { color: var(--ink); background: var(--gold); }
 
 .cr2 .chip {
   appearance: none;
   border: 1px solid var(--line);
-  background: var(--surface);
+  background: transparent;
   color: var(--muted);
-  font: inherit;
-  font-size: 12.5px;
-  font-weight: 600;
-  padding: 6px 13px;
-  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: all 0.15s var(--ease);
+  transition: color 0.15s var(--ease), border-color 0.15s var(--ease);
 }
-.cr2 .chip:hover { color: var(--text); border-color: var(--line-strong); }
-.cr2 .chip.on {
-  color: var(--accent-2);
-  border-color: var(--accent-line);
-  background: var(--accent-soft);
-}
+.cr2 .chip:hover { color: var(--cream); border-color: var(--line-strong); }
+.cr2 .chip.on { color: var(--gold-ink); border-color: var(--gold); background: var(--gold-soft); }
 
 .cr2 .card {
-  background: var(--surface);
+  background: var(--felt-2);
   border: 1px solid var(--line);
   border-radius: var(--radius);
 }

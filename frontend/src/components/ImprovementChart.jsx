@@ -1,3 +1,5 @@
+import { PALETTE, alpha } from '../palette'
+
 export default function ImprovementChart({ timeline, motifTrends, loading }) {
   if (loading) {
     return (
@@ -55,12 +57,12 @@ export default function ImprovementChart({ timeline, motifTrends, loading }) {
               y={height - b.barH}
               width={8}
               height={b.barH}
-              fill="rgba(231, 76, 60, 0.25)"
+              fill={alpha(PALETTE.red, 0.45)}
               rx={2}
             />
           ))}
           {accValues.length > 1 && (
-            <path d={accPath} fill="none" stroke="#27ae60" strokeWidth="2.5" />
+            <path d={accPath} fill="none" stroke={PALETTE.gold} strokeWidth="2" />
           )}
           {points.map((p, i) => {
             const x = pad + (i / Math.max(points.length - 1, 1)) * (width - pad * 2)

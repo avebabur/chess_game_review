@@ -3,26 +3,28 @@
 .home-hero { text-align: center; padding: 26px 0 30px; }
 .home-hero h1 {
   font-size: 40px;
-  font-weight: 780;
-  letter-spacing: -0.03em;
+  font-weight: 400;
   margin: 0;
+  font-family: var(--font-display);
 }
 .home-hero h1 span {
-  background: linear-gradient(180deg, var(--accent-2), var(--accent));
+  background: var(--accent-2);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  font-family: var(--font-display);
+  font-weight: 400;
 }
 .home-hero p { color: var(--muted); font-size: 15.5px; margin: 12px auto 0; max-width: 560px; line-height: 1.5; }
 
 .card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-.card-head h2, .paste-toggle h2 { font-size: 15px; font-weight: 680; margin: 0; }
+.card-head h2, .paste-toggle h2 { font-size: 15px; font-weight: 400; margin: 0; font-family: var(--font-display); }
 
 /* Import card */
 .import-card { padding: 22px; }
 .import-row { display: flex; gap: 12px; align-items: flex-end; }
 .import-field { flex: 1; display: flex; flex-direction: column; gap: 7px; }
-.import-field label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--faint); font-weight: 700; }
+.import-field label { font-size: 11px; text-transform: uppercase; color: var(--faint); font-weight: 700; font-family: var(--font-mono); letter-spacing: 0.12em; }
 .import-field input {
   background: var(--bg);
   border: 1px solid var(--line);
@@ -39,14 +41,13 @@
   appearance: none;
   border: 0;
   border-radius: var(--radius-sm);
-  background: linear-gradient(180deg, var(--accent-2), var(--accent));
-  color: #1a160c;
+  background: var(--accent-2);
+  color: var(--felt);
   font: inherit;
   font-weight: 720;
   font-size: 14.5px;
   padding: 12px 22px;
   cursor: pointer;
-  box-shadow: var(--shadow-sm);
   transition: filter 0.15s var(--ease), transform 0.05s var(--ease);
   white-space: nowrap;
 }
@@ -55,11 +56,13 @@
 .btn-primary:disabled { opacity: 0.5; cursor: default; }
 
 .import-progress { margin-top: 16px; }
-.import-progress .bar { height: 8px; border-radius: 5px; background: var(--surface-3); overflow: hidden; }
+.import-progress .bar { height: 8px; border-radius: 4px; background: var(--surface-3); overflow: hidden; }
 .import-progress .bar i {
-  display: block; height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
-  border-radius: 5px; transition: width 0.4s var(--ease);
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  border-radius: 4px;
+  transition: width 0.4s var(--ease);
 }
 .import-progress p { margin: 9px 0 0; font-size: 13px; color: var(--muted); }
 .import-progress b, .import-done b { color: var(--accent-2); }
@@ -84,10 +87,10 @@
 .ri-players i { color: var(--faint); font-style: normal; font-weight: 400; margin: 0 3px; }
 .ri-meta { display: flex; align-items: center; gap: 10px; }
 .ri-opening { font-size: 12px; color: var(--muted); max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ri-res { font-size: 12px; font-weight: 700; padding: 2px 7px; border-radius: 5px; font-variant-numeric: tabular-nums; }
-.ri-res.w { color: var(--win); background: rgba(116, 178, 92, 0.13); }
-.ri-res.l { color: var(--loss); background: rgba(214, 95, 71, 0.13); }
-.ri-res.d { color: var(--draw); background: rgba(148, 139, 120, 0.14); }
+.ri-res { font-size: 12px; font-weight: 700; padding: 2px 7px; border-radius: 4px; font-variant-numeric: tabular-nums; }
+.ri-res.w { color: var(--win); background: color-mix(in srgb, var(--good) 13%, transparent); }
+.ri-res.l { color: var(--loss); background: color-mix(in srgb, var(--red) 13%, transparent); }
+.ri-res.d { color: var(--draw); background: color-mix(in srgb, var(--felt-3) 14%, transparent); }
 .muted-note { color: var(--muted); font-size: 13.5px; }
 
 /* Paste card */
@@ -96,9 +99,15 @@
 .paste-toggle .chev.open { transform: rotate(180deg); }
 .paste-body { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
 .paste-body textarea {
-  background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm);
-  color: var(--text); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px;
-  padding: 12px; resize: vertical; line-height: 1.5;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  padding: 12px;
+  resize: vertical;
+  line-height: 1.5;
 }
 .paste-body textarea:focus { outline: none; border-color: var(--accent-line); box-shadow: var(--ring); }
 .pgn-val { font-size: 12.5px; padding: 2px; }

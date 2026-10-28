@@ -110,7 +110,7 @@ def reanalyze_moment(
     )
 
     if player_context is None:
-        player_context = db.get_dashboard_stats()
+        player_context = {"concept_review_hints": db.get_concept_review_hints()}
 
     engine = chess.engine.SimpleEngine.popen_uci(STOCKFISH_PATH)
     configure_stockfish_engine(engine)

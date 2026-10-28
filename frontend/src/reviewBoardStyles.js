@@ -19,40 +19,43 @@
 
 import { Chess } from 'chess.js'
 import { CLS_SYMBOLS, parseMoveFromFen, appendLineArrows } from './reviewUtils'
+import { PALETTE, alpha } from './palette'
 
-const LAST_MOVE_BG = { backgroundColor: 'rgba(186, 202, 68, 0.42)' }
+const LAST_MOVE_BG = { backgroundColor: alpha(PALETTE.gold, 0.38) }
 
 // During a coaching moment we show the position BEFORE the played move and
 // want the player to see both what they actually played and what the engine
 // recommended. Two distinct tints make the comparison instant — without
 // this overlay the user only sees the best-move arrow and has no clue
 // where their own move went.
-const PLAYED_MOVE_TINT = { backgroundColor: 'rgba(231, 76, 60, 0.30)' }
-const BEST_MOVE_TINT = { backgroundColor: 'rgba(46, 204, 113, 0.30)' }
+const PLAYED_MOVE_TINT = { backgroundColor: alpha(PALETTE.red, 0.42) }
+const BEST_MOVE_TINT = { backgroundColor: alpha(PALETTE.good, 0.5) }
 
-const SELECTION_BG = { backgroundColor: 'rgba(255, 255, 0, 0.4)' }
+const SELECTION_BG = { backgroundColor: alpha(PALETTE.gold, 0.5) }
 const LEGAL_CAPTURE = {
-  background: 'radial-gradient(transparent 51%, rgba(0,0,0,0.3) 51%)',
+  background: `radial-gradient(transparent 51%, ${alpha(PALETTE.feltDeep, 0.35)} 51%)`,
   borderRadius: '50%',
 }
 const LEGAL_EMPTY = {
-  background: 'radial-gradient(rgba(0,0,0,0.25) 19%, transparent 20%)',
+  background: `radial-gradient(${alpha(PALETTE.feltDeep, 0.35)} 19%, transparent 20%)`,
   cursor: 'pointer',
 }
 const PREVIEW_HIGHLIGHT = {
-  outline: '3px dashed rgba(93, 173, 226, 0.45)',
+  outline: `2px dashed ${alpha(PALETTE.cream, 0.7)}`,
   outlineOffset: '-3px',
 }
+// A flat card-red square, not a glow.
 const CHECK_GLOW = {
-  background: 'radial-gradient(ellipse at center, rgba(220, 20, 20, 0.85) 0%, rgba(169, 0, 0, 0.35) 45%, transparent 72%)',
+  backgroundColor: alpha(PALETTE.red, 0.6),
 }
 
+// Opponent's moves in card red, yours in deep felt, fading along the line.
 const REFUTATION_COLORS = [
-  'rgba(231, 76, 60, 0.9)',
-  'rgba(79, 195, 247, 0.75)',
-  'rgba(231, 76, 60, 0.75)',
-  'rgba(79, 195, 247, 0.6)',
-  'rgba(231, 76, 60, 0.6)',
+  alpha(PALETTE.red, 0.9),
+  alpha(PALETTE.feltDeep, 0.8),
+  alpha(PALETTE.red, 0.75),
+  alpha(PALETTE.feltDeep, 0.6),
+  alpha(PALETTE.red, 0.6),
 ]
 
 /**
@@ -194,8 +197,8 @@ export function buildBoardArrows({
         const stepSq = parseMoveFromFen(prevFen, boardPreview.link.san)
         if (stepSq) {
           const color = boardPreview.link.opponent === false
-            ? 'rgba(79, 195, 247, 0.95)'
-            : 'rgba(231, 76, 60, 0.95)'
+            ? alpha(PALETTE.feltDeep, 0.9)
+            : alpha(PALETTE.red, 0.95)
           arrs.push([stepSq.from, stepSq.to, color])
         }
       }
@@ -215,7 +218,7 @@ export function buildBoardArrows({
   if (isExploring && exploreEval?.best_move && displayPosition) {
     const bestSq = parseMoveFromFen(displayPosition, exploreEval.best_move)
     if (bestSq) {
-      arrs.push([bestSq.from, bestSq.to, 'rgb(0, 180, 0)'])
+      arrs.push([bestSq.from, bestSq.to, PALETTE.gold])
     }
   }
 

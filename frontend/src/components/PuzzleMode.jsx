@@ -9,6 +9,7 @@ import { useBoardSize } from '../useBoardSize'
 import { playStepSound, playIllegalSound } from '../sounds'
 import BoardCoordinates, { BoardFileStrip } from './BoardCoordinates'
 import PromotionDialog from './PromotionDialog'
+import { PALETTE, alpha } from '../palette'
 
 export default function PuzzleMode() {
   const [searchParams] = useSearchParams()
@@ -69,19 +70,19 @@ export default function PuzzleMode() {
   const squareStyles = useMemo(() => {
     const styles = {}
     if (selectedSquare) {
-      styles[selectedSquare] = { backgroundColor: 'rgba(255, 255, 0, 0.4)' }
+      styles[selectedSquare] = { backgroundColor: alpha(PALETTE.gold, 0.5) }
       try {
         const chess = new Chess(boardPosition)
         for (const move of legalMoves) {
           const targetPiece = chess.get(move.to)
           if (targetPiece) {
             styles[move.to] = {
-              background: 'radial-gradient(transparent 51%, rgba(0,0,0,0.3) 51%)',
+              background: `radial-gradient(transparent 51%, ${alpha(PALETTE.feltDeep, 0.35)} 51%)`,
               borderRadius: '50%',
             }
           } else {
             styles[move.to] = {
-              background: 'radial-gradient(rgba(0,0,0,0.25) 19%, transparent 20%)',
+              background: `radial-gradient(${alpha(PALETTE.feltDeep, 0.35)} 19%, transparent 20%)`,
               cursor: 'pointer',
             }
           }
@@ -334,7 +335,7 @@ export default function PuzzleMode() {
   }
 
   const statusColor = {
-    waiting: '#888', hint: '#f39c12', solved: '#27ae60', revealed: '#e74c3c',
+    waiting: PALETTE.faint, hint: PALETTE.gold, solved: PALETTE.good, revealed: PALETTE.redInk,
   }
 
   return (

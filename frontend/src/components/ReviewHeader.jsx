@@ -35,7 +35,7 @@ export default function ReviewHeader({
             {reanalyzeStatus === 'running'
               ? 'Re-analyzing…'
               : reanalyzeStatus === 'done'
-                ? 'Re-analyzed ✓'
+                ? 'Re-analyzed'
                 : 'Re-analyze game'}
           </button>
         </div>

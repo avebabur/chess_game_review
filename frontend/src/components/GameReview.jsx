@@ -73,6 +73,11 @@ export default function GameReview() {
 
   const fenCache = useMemo(() => {
     if (!moves.length) return [START_FEN]
+    // The server already stores every position; replaying the game through
+    // chess.js is only a fallback for analyses saved before `fen_after` existed.
+    if (moves.every(m => m.fen_after)) {
+      return [moves[0].fen || START_FEN, ...moves.map(m => m.fen_after)]
+    }
     const fens = [START_FEN]
     const chess = new Chess()
     for (let i = 0; i < moves.length; i++) {
@@ -213,7 +218,11 @@ export default function GameReview() {
   if (isExploring) {
     evalScore = exploreEval?.eval ?? currentMoveData?.eval_after ?? 0.2
   } else if (coachingDiffMoment) {
-    evalScore = coachingDiffMoment.eval_before
+    // Match the bar to the board: it shows the position after the played move
+    // whenever `fen_after` exists (it used to show the pre-move eval there).
+    evalScore = coachingDiffMoment.fen_after
+      ? coachingDiffMoment.eval_after
+      : coachingDiffMoment.eval_before
   } else if (currentMoveData) {
     evalScore = currentMoveData.eval_after
   } else {

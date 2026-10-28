@@ -147,6 +147,28 @@ def _renice_engine(engine, niceness=10):
         pass
 
 
+class _GameScopedEngine:
+    """Engine handle for one `checkout`: every analyse call carries the same
+    `game` token, so python-chess sends `ucinewgame` (clearing the TT) on the
+    first call only — calls within the checkout share their TT, calls from a
+    different checkout never see it."""
+
+    def __init__(self, engine, game):
+        self._engine = engine
+        self._game = game
+
+    def analyse(self, board, limit, **kwargs):
+        kwargs.setdefault("game", self._game)
+        return self._engine.analyse(board, limit, **kwargs)
+
+    def analysis(self, board, limit=None, **kwargs):
+        kwargs.setdefault("game", self._game)
+        return self._engine.analysis(board, limit, **kwargs)
+
+    def __getattr__(self, name):
+        return getattr(self._engine, name)
+
+
 class StockfishPool:
     """Pool of Stockfish engine processes for parallel position analysis.
 
@@ -200,9 +222,11 @@ class StockfishPool:
         try:
             # Force deterministic state: TT cleared, no leakage from a
             # previous position this engine happened to analyse. This is
-            # what makes parallel results identical to sequential.
-            engine.protocol.send_line("ucinewgame")
-            return engine.analyse(board, limit, multipv=multipv)
+            # what makes parallel results identical to sequential. A fresh
+            # `game` token makes python-chess send `ucinewgame` itself, on its
+            # own event-loop thread (writing to the engine's transport from
+            # this worker thread, as before, wasn't thread-safe).
+            return engine.analyse(board, limit, multipv=multipv, game=object())
         finally:
             self._queue.put(engine)
 
@@ -224,8 +248,7 @@ class StockfishPool:
         """
         engine = self._queue.get()
         try:
-            engine.protocol.send_line("ucinewgame")
-            yield engine
+            yield _GameScopedEngine(engine, object())
         finally:
             self._queue.put(engine)
 

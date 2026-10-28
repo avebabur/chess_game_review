@@ -1,83 +1,99 @@
-/* App shell — new nav + global background. Loaded after App.css so it wins. */
-body {
-  background: radial-gradient(1200px 600px at 50% -10%, #221d14 0%, #16140f 55%, #100e0a 100%);
-  background-attachment: fixed;
-}
-
+/* App shell — nav + page frame. Loaded after App.css so it wins. */
 .app { min-height: 100vh; display: flex; flex-direction: column; }
 
-/* Legacy screens (Dashboard, Puzzles, Play, Review) are styled in App.css off a
- * handful of CSS vars. Remapping them here re-skins every legacy screen to the
- * new palette with no per-component edits. New screens wrap in `.cr2`, which
- * sets its own tokens closer in the tree, so they're unaffected. */
+/* Legacy screens (Dashboard, Puzzles, Review) are styled in App.css off a
+ * handful of CSS vars; point them at the shared palette. */
 .main-content {
-  flex: 1; width: 100%; max-width: 1600px; margin: 0 auto; padding: 22px 22px 60px;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --bg: #16140f;
-  --bg-card: #211e18;
-  --bg-input: #16140f;
-  --card: #211e18;
-  --border: #3d3729;
-  --text: #f1ece1;
-  --text-primary: #f1ece1;
-  --text-muted: #a8a08d;
-  --text-secondary: #a8a08d;
-  --accent: #e0a93f;
-  --success: #74b25c;
-  --danger: #d65f47;
-  --draw: #948b78;
-  --board-frame: #2a261e;
-  --board-dark: #2a261e;
+  flex: 1; width: 100%; max-width: 1600px; margin: 0 auto; padding: 26px 22px 64px;
+  font-family: var(--font-body);
+  --bg: var(--felt);
+  --bg-card: var(--felt-2);
+  --bg-input: var(--felt-deep);
+  --card: var(--felt-2);
+  --border: var(--line);
+  --text: var(--cream);
+  --text-primary: var(--cream);
+  --text-muted: var(--muted);
+  --text-secondary: var(--muted);
+  --accent: var(--gold);
+  --success: var(--good);
+  --danger: var(--red-ink);
+  --warning: var(--gold);
+  --draw: var(--muted);
+  --board-frame: var(--felt-deep);
+  --board-dark: var(--felt-deep);
+  --analysis-cyan: var(--cream);
 }
 
-/* Nav */
+/* Nav — a ruled masthead */
 .nav2 {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 0 22px;
-  height: 60px;
-  background: rgba(24, 21, 16, 0.82);
-  backdrop-filter: saturate(140%) blur(12px);
-  border-bottom: 1px solid var(--line);
+  padding: 0 26px;
+  height: 64px;
+  background: var(--felt);
+  border-bottom: 1px solid var(--gold-line);
   position: sticky;
   top: 0;
   z-index: 40;
 }
 .nav2-brand {
   display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  font-size: 17px;
-  font-weight: 740;
-  letter-spacing: -0.01em;
-  color: var(--text);
+  align-items: baseline;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--cream);
   text-decoration: none;
 }
-.nav2-logo {
-  color: var(--accent);
-  font-size: 20px;
-  filter: drop-shadow(0 1px 4px rgba(224, 169, 63, 0.35));
-}
-.nav2-links { display: flex; gap: 3px; }
+.nav2-logo { color: var(--gold); font-size: 22px; line-height: 1; }
+.nav2-links { display: flex; gap: 4px; }
 .nav2-link {
   color: var(--muted);
   text-decoration: none;
-  font-size: 14px;
-  font-weight: 600;
-  padding: 8px 15px;
-  border-radius: var(--radius-sm);
-  transition: color 0.15s var(--ease), background 0.15s var(--ease);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  border-bottom: 1px solid transparent;
+  transition: color 0.15s var(--ease), border-color 0.15s var(--ease);
 }
-.nav2-link:hover { color: var(--text); background: rgba(255, 255, 255, 0.04); }
-.nav2-link.on { color: var(--accent-2); background: var(--accent-soft); }
+.nav2-link:hover { color: var(--cream); }
+.nav2-link.on { color: var(--gold-ink); border-bottom-color: var(--gold); }
 
 @media (max-width: 720px) {
-  .nav2 { flex-direction: column; height: auto; padding: 10px 14px; gap: 10px; }
+  .nav2 { flex-direction: column; height: auto; padding: 12px 16px; gap: 8px; }
   .nav2-links { flex-wrap: wrap; justify-content: center; }
+  .main-content { padding: 18px 16px 48px; }
 }
 
-.route-loading { padding: 80px 20px; text-align: center; color: var(--muted); font-size: 15px; }
-.cr2 .link, .link { color: var(--accent-2); text-decoration: none; font-weight: 600; }
-.cr2 .link:hover { text-decoration: underline; }
+.route-loading {
+  padding: 80px 20px; text-align: center; color: var(--faint);
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+}
+.cr2 .link, .link { color: var(--gold-ink); text-decoration: none; }
+.cr2 .link:hover, .link:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* Baseline for buttons no component styles (puzzle navigation, follow-up
+ * controls…). :where() keeps specificity at zero so any class rule wins. */
+:where(.main-content) button {
+  font: inherit;
+  font-size: 14px;
+  color: var(--cream);
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: border-color 0.15s var(--ease), color 0.15s var(--ease);
+}
+:where(.main-content) button:hover:not(:disabled) { border-color: var(--gold); color: var(--gold-ink); }
+:where(.main-content) button:disabled { opacity: 0.45; cursor: default; }
+
+.puzzle-nav, .follow-up-buttons { display: flex; gap: 8px; margin-top: 12px; }
+.retry-btn { margin-top: 12px; }
